@@ -101,10 +101,10 @@
       </li>
       <li class="nav-item">
 
-<a class="nav-link" href="addAdmin.php">
-    <i class="fas fa-fw fa-table"></i>
-    <span>Add Admin</span></a>
-</li>
+        <a class="nav-link" href="addAdmin.php">
+          <i class="fas fa-fw fa-table"></i>
+          <span>Add Admin</span></a>
+      </li>
       <li class="nav-item">
         <a class="nav-link" href="../index.php">
           <i class="fas fa-fw fa-table"></i>
@@ -156,6 +156,7 @@
 </body>
 <h2> Category Adding Section</h2>
 <hr style="border: solid 1px rgb(137, 137, 228);">
+
 <body>
   <div class="formbold-main-wrapper">
     <!-- Author: FormBold Team -->
@@ -166,12 +167,14 @@
         <div class="formbold-input-flex">
           <div>
             <label for="Catagoray_name" class="formbold-form-label"> Category Name </label>
-            <input type="text" name="Catagoray_name" id="Catagoray_name" placeholder=" Catagoray name" class="formbold-form-input" />
+            <input type="text" name="Catagoray_name" id="Catagoray_name" placeholder=" Catagoray name"
+              class="formbold-form-input" />
           </div>
 
           <div>
             <label for="Catagoray_type" class="formbold-form-label"> Category Type </label>
-            <input type="text" name="Catagoray_type" id="Catagoray_type" placeholder="Catagoray type" class="formbold-form-input" />
+            <input type="text" name="Catagoray_type" id="Catagoray_type" placeholder="Catagoray type"
+              class="formbold-form-input" />
           </div>
         </div>
 
@@ -179,7 +182,8 @@
           <label for="Category_Description" class="formbold-form-label">
             Category Description
           </label>
-          <textarea rows="6" name="Category_Description" id="Category_Description" class="formbold-form-input"></textarea>
+          <textarea rows="6" name="Category_Description" id="Category_Description"
+            class="formbold-form-input"></textarea>
         </div>
         <div class="formbold-form-file-flex">
           <label for="upload" class="formbold-form-label">
@@ -201,66 +205,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $categoryName = $_POST['Catagoray_name'];
     $categoryType = $_POST['Catagoray_type'];
     $categoryDescription = $_POST['Category_Description'];
-    // File upload handling
-    $targetDirectory = "uploads/"; // Updated path to the "uploads" folder
-    $targetFile = $targetDirectory . basename($_FILES["upload"]["name"]);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-    // Check if image file is a valid image
-    $check = getimagesize($_FILES["upload"]["tmp_name"]);
-    if ($check === false) {
-        echo "Error: File is not a valid image.";
-        $uploadOk = 0;
-    }
+    try {
+        if ($_FILES["upload"]["error"] == 4) {
+            echo "<script> alert('Image Does Not Exist'); </script>";
+        } else {
+            $fileName = $_FILES["upload"]["name"];
+            $fileSize = $_FILES["upload"]["size"];
+            $tmpName = $_FILES["upload"]["tmp_name"];
 
-    // Check if file already exists
-    if (file_exists($targetFile)) {
-        echo "Error: File already exists.";
-        $uploadOk = 0;
-    }
+            $validImageExtension = ['jpg', 'jpeg', 'png'];
+            $imageExtension = explode('.', $fileName);
+            $imageExtension = strtolower(end($imageExtension));
 
-    // Check file size
-    if ($_FILES["upload"]["size"] > 5000000) {
-        echo "Error: File size is too large (maximum allowed: 5MB).";
-        $uploadOk = 0;
-    }
-
-    // Allow certain file formats
-    $allowedFileTypes = array("jpg", "jpeg", "png", "gif");
-    if (!in_array($imageFileType, $allowedFileTypes)) {
-        echo "Error: Only JPG, JPEG, PNG, and GIF files are allowed.";
-        $uploadOk = 0;
-    }
-
-    if ($uploadOk == 1) {
-        try {
-            if (move_uploaded_file($_FILES["upload"]["tmp_name"], $targetFile)) {
-                echo "The file " . htmlspecialchars(basename($_FILES["upload"]["name"])) . " has been uploaded.";
-
-                // Insert data into the database
-                $sql = "INSERT INTO category (CAT_NAME, CAT_TYPE, CAT_DESCRIPTION, CAT_PIC) VALUES ('$categoryName', '$categoryType', '$categoryDescription', '$targetFile')";
-
-                if ($conn->query($sql) === TRUE) {
-                    echo "Category added successfully.";
-                } else {
-                    echo "Error: " . $sql . "<br>" . $conn->error;
-                }
+            if (!in_array($imageExtension, $validImageExtension)) {
+                echo "<script>alert('Invalid Image Extension');</script>";
+            } else if ($fileSize > 1000000) {
+                echo "<script>alert('Image Size Is Too Large');</script>";
             } else {
-                throw new Exception("Error uploading file.");
+                $newImageName = uniqid() . '.' . $imageExtension;
+
+                // Check if the upload directory exists, create it if not
+                $uploadDirectory = 'img/';
+                if (!is_dir($uploadDirectory)) {
+                    mkdir($uploadDirectory, 0777, true);
+                }
+
+                $destination = $uploadDirectory . $newImageName;
+
+                if (move_uploaded_file($tmpName, $destination)) {
+                    $query = "INSERT INTO category (CAT_NAME, CAT_TYPE, CAT_DESCRIPTION, CAT_PIC) VALUES ('$categoryName', '$categoryType', '$categoryDescription', '$newImageName')";
+                    mysqli_query($conn, $query);
+                    echo "<script>alert('Successfully Added');</script>";
+                } else {
+                    echo "<script>alert('Error moving file to destination');</script>";
+                }
             }
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
         }
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
     }
-
-    // Close database connection
-    $conn->close();
 }
+
+// Close database connection
+$conn->close();
 ?>
-
-
-
 </body>
 
 

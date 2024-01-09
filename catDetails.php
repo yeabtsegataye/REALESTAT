@@ -7,7 +7,7 @@ $cat_id = $_GET['cat_id'];
 // Fetch category and property data
 $sql = "SELECT 
     category.CAT_NAME, category.CAT_TYPE, category.CAT_DESCRIPTION,
-    property.PR_TYPE, property.PR_PIC, property.PR_DESCRIPTION,property.PR_ID
+    property.PR_TYPE, property.PR_PIC, property.PR_DESCRIPTION, property.PR_ID
 FROM category
 LEFT JOIN property ON property.CAT_ID = category.CAT_ID
 WHERE category.CAT_ID = $cat_id";
@@ -32,7 +32,7 @@ if (mysqli_num_rows($result) > 0) {
             <div class="sale_container">
                 <?php
                 // Fetch other rows in the result set
-                while ($propertyData = mysqli_fetch_assoc($result)) {
+                foreach ($result as $propertyData) {
                     ?>
                     <div class="box m-1 p-3" style="box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
                         <a href="propertyDetails.php?pr_id=<?php echo $propertyData['PR_ID']; ?>" class="">

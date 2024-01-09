@@ -340,8 +340,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
     if ($stmt->execute()) {
         echo "<alert>Data inserted successfully!</alert>";
+        echo
+        "
+      <script>
+        alert('Data inserted successfully!');
+      </script>
+      ";
     } else {
         echo "<p>Error inserting data: " . $stmt->error . "</p>";
+        echo
+        "
+      <script>
+        alert('$stmt->error');
+      </script>
+      ";
     }
 
     $stmt->close();

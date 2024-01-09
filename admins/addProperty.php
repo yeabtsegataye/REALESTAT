@@ -264,9 +264,8 @@
     </div>
     <!-- End of Main Content -->
     <?php
-    // include '../config/config.php';
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if (!empty($_POST)) {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!empty($_POST)) {
         $RN_SALON = $_POST['RN_SALON'];
         $RN_BEDROOM = $_POST['RN_BEDROOM'];
         $RN_KITCHEN = $_POST['RN_KITCHEN'];
@@ -295,34 +294,91 @@
         mysqli_stmt_bind_param($stmt, "sssssssssiisss", $pr_pic, $pr_type, $pr_location, $pr_price, $pr_description, $pr_sqft, $pr_yearofbuild, $pr_features, $pr_status, $rn_id, $cat_id, $created_at, $pr_city, $pr_name);
 
         if (mysqli_stmt_execute($stmt)) {
-          // Retrieve the last inserted property id
-          $PR_ID = mysqli_insert_id($conn);
-          echo "Property record inserted successfully";
+            // Retrieve the last inserted property id
+            $PR_ID = mysqli_insert_id($conn);
+            echo "Property record inserted successfully";
 
-          // Assuming you have a foreign key column in the room table named 'PR_ID'
-          $sql = "INSERT INTO room_num (PR_ID, RN_SALON, RN_BEDROOM, RN_KITCHEN, RN_SERVICE, RN_BATHROOM) VALUES (?, ?, ?, ?, ?, ?)";
+            // Assuming you have a foreign key column in the room table named 'PR_ID'
+            $sql = "INSERT INTO room_num (PR_ID, RN_SALON, RN_BEDROOM, RN_KITCHEN, RN_SERVICE, RN_BATHROOM) VALUES (?, ?, ?, ?, ?, ?)";
 
-          $stmt = mysqli_prepare($conn, $sql);
-          mysqli_stmt_bind_param($stmt, 'isssss', $PR_ID, $RN_SALON, $RN_BEDROOM, $RN_KITCHEN, $RN_SERVICE, $RN_BATHROOM);
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, 'isssss', $PR_ID, $RN_SALON, $RN_BEDROOM, $RN_KITCHEN, $RN_SERVICE, $RN_BATHROOM);
 
-          if (mysqli_stmt_execute($stmt)) {
-            echo "Room record inserted successfully";
-          } else {
-            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-          }
+            if (mysqli_stmt_execute($stmt)) {
+                echo "Room record inserted successfully";
+            } else {
+                echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+            }
+            ////////////////////
+            try {
+                $uploadDirectory = 'img/';
+                $uploadedImageNames = [];
 
-          mysqli_stmt_close($stmt);
+                for ($i = 1; $i <= 8; $i++) {
+                    $inputName = "upload" . $i;
+
+                    if ($_FILES[$inputName]["error"] == 4) {
+                        continue; // Image does not exist, move to the next one
+                    }
+
+                    $fileName = $_FILES[$inputName]["name"];
+                    $fileSize = $_FILES[$inputName]["size"];
+                    $tmpName = $_FILES[$inputName]["tmp_name"];
+
+                    $validImageExtension = ['jpg', 'jpeg', 'png'];
+                    $imageExtension = explode('.', $fileName);
+                    $imageExtension = strtolower(end($imageExtension));
+
+                    if (!in_array($imageExtension, $validImageExtension)) {
+                        echo "<script>alert('Invalid Image Extension');</script>";
+                    } elseif ($fileSize > 1000000) {
+                        echo "<script>alert('Image Size Is Too Large');</script>";
+                    } else {
+                        $newImageName = uniqid() . '.' . $imageExtension;
+                        $destination = $uploadDirectory . $newImageName;
+
+                        if (move_uploaded_file($tmpName, $destination)) {
+                            $uploadedImageNames[] = $newImageName;
+                        } else {
+                            echo "<script>alert('Error moving file to destination');</script>";
+                        }
+                    }
+                }
+
+                // Insert uploaded image names into the database
+                $query = "INSERT INTO property_pic (PP_PIC_1, PP_PIC_2, PP_PIC_3, PP_PIC_4, PP_PIC_5, PP_PIC_6, PP_PIC_7, PP_PIC_8, PR_ID) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                $stmt = mysqli_prepare($conn, $query);
+                $params = array_merge($uploadedImageNames, array_fill(0, 9 - count($uploadedImageNames), null), [$PR_ID]);
+
+                mysqli_stmt_bind_param($stmt, 'ssssssssi', ...$params);
+
+                if (mysqli_stmt_execute($stmt)) {
+                    echo "<script>alert('Successfully Added');</script>";
+                } else {
+                    echo "Error: " . $query . "<br>" . mysqli_error($conn);
+                }
+
+                mysqli_stmt_close($stmt);
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
+            }
         } else {
-          echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
 
         mysqli_stmt_close($stmt);
-      } else {
+    } else {
         echo "Form data is empty. Please submit the form.";
-      }
     }
+}
 
-    ?>
+mysqli_close($conn);
+
+?>
+
+  
     <!-- Footer -->
     <footer class="sticky-footer bg-white">
       <div class="container my-auto">
@@ -366,5 +422,4 @@
 <script src="js/demo/chart-bar-demo.js"></script>
 
 </body>
-
 </html>
