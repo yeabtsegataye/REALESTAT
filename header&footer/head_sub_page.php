@@ -102,7 +102,7 @@
                 <a href="rent.php">RENT</a>
                 <a href="price.php">PRICING</a>
                 <a href="contact.php">CONTACT US</a>
-                <a href="./admins/index.php">Admin</a>
+                <a href="./admins/login.php">Admin</a>
               </div>
             </div>
           </div>
