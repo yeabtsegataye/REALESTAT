@@ -63,6 +63,17 @@
         <i class="fas fa-fw fa-table"></i>
         <span>Assign Scadule</span></a>
     </li>
+    <li class="nav-item">
+
+<a class="nav-link" href="addAdmin.php">
+    <i class="fas fa-fw fa-table"></i>
+    <span>Add Admin</span></a>
+</li>
+    <li class="nav-item">
+        <a class="nav-link" href="../index.php">
+          <i class="fas fa-fw fa-table"></i>
+          <span>Back to Home</span></a>
+      </li>
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block" />
 

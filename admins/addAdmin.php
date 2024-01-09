@@ -78,6 +78,12 @@
                 <span>Assign Scadule</span></a>
         </li>
         <li class="nav-item">
+
+            <a class="nav-link" href="addAdmin.php">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Add Admin</span></a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="../index.php">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Back to Home</span></a>
@@ -136,22 +142,22 @@
                         <!-- Author: FormBold Team -->
                         <!-- Learn More: https://formbold.com -->
                         <div class="formbold-form-wrapper">
-                            <h2> Employee Adding Section</h2>
+                            <h2> Admin Adding Section</h2>
                             <hr style="border: solid 1px rgb(137, 137, 228);">
                             <!-- <img src="your-image-here.jpg"> -->
                             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" id="myForm">
                                 <div class="formbold-input-flex">
                                     <div>
-                                        <label for="EM_FNAME" class="formbold-form-label">First Name</label>
-                                        <input type="text" name="EM_FNAME" id="EM_FNAME" placeholder="First Name"
+                                        <label for="AD_FNAME" class="formbold-form-label">First Name</label>
+                                        <input type="text" name="AD_FNAME" id="AD_FNAME" placeholder="First Name"
                                             class="formbold-form-input" />
                                         <p id="firstnameError" class="error"></p>
 
                                     </div>
 
                                     <div>
-                                        <label for="EM_LNAME" class="formbold-form-label">Last Name</label>
-                                        <input type="text" name="EM_LNAME" id="EM_LNAME" placeholder="Last Name"
+                                        <label for="AD_LNAME" class="formbold-form-label">Last Name</label>
+                                        <input type="text" name="AD_LNAME" id="AD_LNAME" placeholder="Last Name"
                                             class="formbold-form-input" />
                                         <p id="lastnameError" class="error"></p>
 
@@ -159,22 +165,22 @@
                                 </div>
                                 <div class="formbold-input-flex">
                                     <div>
-                                        <label for="EM_COUNTRY" class="formbold-form-label">Country</label>
-                                        <input type="text" name="EM_COUNTRY" id="EM_COUNTRY" placeholder="Country"
+                                        <label for="AD_COUNTRY" class="formbold-form-label">Country</label>
+                                        <input type="text" name="AD_COUNTRY" id="AD_COUNTRY" placeholder="Country"
                                             class="formbold-form-input" />
                                         <p id="countryError" class="error"></p>
 
                                     </div>
                                     <div>
-                                        <label for="EM_CITY" class="formbold-form-label">City</label>
-                                        <input type="text" name="EM_CITY" id="EM_CITY" placeholder="City"
+                                        <label for="AD_CITY" class="formbold-form-label">City</label>
+                                        <input type="text" name="AD_CITY" id="AD_CITY" placeholder="City"
                                             class="formbold-form-input" />
                                         <p id="cityError" class="error"></p>
 
                                     </div>
                                     <div>
-                                        <label for="EM_SUBCITY" class="formbold-form-label">sub City</label>
-                                        <input type="text" name="EM_SUBCITY" id="EM_SUBCITY" placeholder="City"
+                                        <label for="AD_SUBCITY" class="formbold-form-label">sub City</label>
+                                        <input type="text" name="AD_SUBCITY" id="AD_SUBCITY" placeholder="City"
                                             class="formbold-form-input" />
                                         <p id="cityError" class="error"></p>
 
@@ -182,21 +188,21 @@
                                 </div>
                                 <div class="formbold-input-flex">
                                     <div>
-                                        <label for="qualification" class="formbold-form-label">Qualification</label>
-                                        <input type="text" name="EM_QULAIFICATION" id="qualification"
+                                        <label for="AD_QULAIFICATION" class="formbold-form-label">Qualification</label>
+                                        <input type="text" name="AD_QULAIFICATION" id="AD_QULAIFICATION"
                                             placeholder="Qualification" class="formbold-form-input" />
                                         <p id="qualificationError" class="error"></p>
 
                                     </div>
                                     <div>
-                                        <label for="salary" class="formbold-form-label">Salary</label>
-                                        <input type="text" name="EM_SALARY" id="salary" placeholder="Salary"
+                                        <label for="AD_SALARY" class="formbold-form-label">Salary</label>
+                                        <input type="text" name="AD_SALARY" id="AD_SALARY" placeholder="Salary"
                                             class="formbold-form-input" />
                                         <p id="salaryError" class="error"></p>
                                     </div>
                                     <div>
                                         <label for="position" class="formbold-form-label">Position</label>
-                                        <input type="text" name="EM_POSITION" id="position" placeholder="Position"
+                                        <input type="text" name="AD_POSITION" id="position" placeholder="Position"
                                             class="formbold-form-input" />
                                         <p id="positionError" class="error"></p>
                                     </div>
@@ -204,20 +210,20 @@
                                 <div class="formbold-input-flex">
                                     <div>
                                         <label for="EM_EMAIL" class="formbold-form-label">Email</label>
-                                        <input type="email" name="EM_EMAIL" id="EM_EMAIL"
+                                        <input type="email" name="AD_EMAIL" id="EM_EMAIL"
                                             placeholder="example@email.com" class="formbold-form-input" />
                                         <p id="emailError" class="error"></p>
                                     </div>
                                     <div>
                                         <label for="EM_PASSWORD" class="formbold-form-label">Password</label>
-                                        <input type="password" name="EM_PASSWORD" id="EM_PASSWORD"
+                                        <input type="password" name="AD_PASSWORD" id="EM_PASSWORD"
                                             placeholder="Enter Password" class="formbold-form-input" />
                                         <p id=""></p>
                                     </div>
                                 </div>
                                 <div>
                                     <label class="formbold-form-label">Gender</label>
-                                    <select class="formbold-form-input" name="EM_SEX" id="EM_SEX">
+                                    <select class="formbold-form-input" name="AD_SEX" id="EM_SEX">
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
                                     </select>
@@ -227,7 +233,7 @@
                                     <div>
                                         <input type="text" name="areacode1" id="areacode1" placeholder="Area code"
                                             class="formbold-form-input formbold-w-45" />
-                                        <input type="text" name="EM_CELLPHONE1" id="EM_CELLPHONE1"
+                                        <input type="text" name="AD_CELLPHONE1" id="EM_CELLPHONE1"
                                             placeholder="Phone number" class="formbold-form-input" />
                                     </div>
                                 </div>
@@ -236,7 +242,7 @@
                                     <div>
                                         <input type="text" name="areacode2" id="areacode2" placeholder="Area code"
                                             class="formbold-form-input formbold-w-45" />
-                                        <input type="text" name="EM_CELLPHONE2" id="EM_CELLPHONE2"
+                                        <input type="text" name="AD_CELLPHONE2" id="EM_CELLPHONE2"
                                             placeholder="Phone number" class="formbold-form-input" />
                                     </div>
                                 </div>
@@ -245,29 +251,29 @@
                                     <div>
                                         <input type="text" name="emergencyareacode" id="emergencyContact1"
                                             placeholder="Area code" class="formbold-form-input formbold-w-45" />
-                                        <input type="text" name="EM_EMERGENCY_CONTACT" id="emergencyContact"
+                                        <input type="text" name="AD_EMERGENCY_CONTACT" id="emergencyContact"
                                             placeholder="Phone number" class="formbold-form-input" />
                                     </div>
                                 </div>
                                 <div class="formbold-mb-3">
                                     <label for="status" class="formbold-form-label">Status</label>
-                                    <input type="text" name="EM_STATUS" id="status" placeholder="Employee Status"
+                                    <input type="text" name="AD_STATUS" id="status" placeholder="admin Status"
                                         class="formbold-form-input" />
                                 </div>
                                 <div class="formbold-mb-3">
                                     <label for="EM_DATEOFBIRTH" class="formbold-form-label">Age</label>
-                                    <input type="date" name="EM_DATEOFBIRTH" id="EM_DATEOFBIRTH"
+                                    <input type="date" name="AD_DATEOFBIRTH" id="EM_DATEOFBIRTH"
                                         placeholder="Employee Age" class="formbold-form-input" />
                                 </div>
                                 <div class="formbold-mb-3">
                                     <label for="address" class="formbold-form-label">Address</label>
-                                    <input type="text" name="EM_HOUSENUMBER" id="EM_HOUSENUMBER"
+                                    <input type="text" name="AD_HOUSENUMBER" id="EM_HOUSENUMBER"
                                         placeholder="house number" class="formbold-form-input formbold-mb-3" />
 
                                 </div>
                                 <div class="formbold-form-file-flex">
                                     <label for="uploadEmployeePic" class="formbold-form-label">Upload Picture</label>
-                                    <input type="file" name="EM_PICTURE" id="uploadEmployeePic"
+                                    <input type="file" name="AD_PICTURE" id="uploadEmployeePic"
                                         class="formbold-form-file" />
                                 </div>
                                 <input class="formbold-btn" type="submit">
@@ -277,38 +283,69 @@
                 </body>
                 <?php
                 include '../config/config.php';
-                ?>
-                <?php
-                if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                    // ... your other code ...
-                    $firstName = $_POST['EM_FNAME'];
-                    $lastName = $_POST['EM_LNAME'];
-                    $country = $_POST['EM_COUNTRY'];
-                    $city = $_POST['EM_CITY'];
-                    $subCity = $_POST['EM_SUBCITY'];
-                    $qualification = $_POST['EM_QULAIFICATION'];
-                    $salary = $_POST['EM_SALARY'];
-                    $position = $_POST['EM_POSITION'];
-                    $email = $_POST['EM_EMAIL'];
-                    $password = $_POST['EM_PASSWORD'];
-                    $gender = $_POST['EM_SEX'];
-                    $phone1 = $_POST['EM_CELLPHONE1'];
-                    $phone2 = $_POST['EM_CELLPHONE2'];
-                    $emergencyContact = $_POST['EM_EMERGENCY_CONTACT'];
-                    $status = $_POST['EM_STATUS'];
-                    $dateOfBirth = $_POST['EM_DATEOFBIRTH'];
-                    $address = $_POST['EM_HOUSENUMBER'];
 
-                    $stmt = $conn->prepare("INSERT INTO employee (EM_FNAME, EM_LNAME, EM_DATEOFBIRTH, EM_SEX, EM_CELLPHONE1, EM_CELLPHONE2, EM_COUNTRY, EM_CITY, EM_SUBCITY, EM_HOUSENUMBER, EM_EMAIL, EM_PASSWORD, EM_POSITION, EM_SALARY, EM_PICTURE, EM_STATUS, EM_QULAIFICATION, EM_EMERGENCY_CONTACT) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+                    // Assuming you have received form data and stored them in variables
+                    $firstName = $_POST['AD_FNAME'];
+                    $lastName = $_POST['AD_LNAME'];
+                    $country = $_POST['AD_COUNTRY'];
+                    $city = $_POST['AD_CITY'];
+                    $subCity = $_POST['AD_SUBCITY'];
+                    $qualification = $_POST['AD_QULAIFICATION'];
+                    $salary = $_POST['AD_SALARY'];
+                    $position = $_POST['AD_POSITION'];
+                    $email = $_POST['AD_EMAIL'];
+                    $password = $_POST['AD_PASSWORD'];
+                    $gender = $_POST['AD_SEX'];
+                    $areaCode1 = $_POST['areacode1'];
+                    $cellphone1 = $_POST['AD_CELLPHONE1'];
+                    $areaCode2 = $_POST['areacode2'];
+                    $cellphone2 = $_POST['AD_CELLPHONE2'];
+                    $emergencyAreaCode = $_POST['emergencyareacode'];
+                    $emergencyContact = $_POST['AD_EMERGENCY_CONTACT'];
+                    $status = $_POST['AD_STATUS'];
+                    $dateOfBirth = $_POST['AD_DATEOFBIRTH'];
+                    $houseNumber = $_POST['AD_HOUSENUMBER'];
 
-                    $stmt->bind_param('ssssssssssssssssss',  $firstName, $lastName, $dateOfBirth, $gender, $phone1, $phone2, $country, $city, $subCity, $address, $email, $password, $position, $salary, $emptyValue, $status, $qualification, $emergencyContact);
-
+                    // Insert data into the database
+                    $stmt = $conn->prepare("INSERT INTO admins (
+                AD_FNAME, AD_LNAME, AD_COUNTRY, AD_CITY, AD_SUBCITY,
+                AD_QULAIFICATION,AD_SALARY, AD_POSITION, AD_EMAIL, AD_PASSWORD,
+                AD_SEX,AD_CELLPHONE1, AD_CELLPHONE2, AD_EMERGENCY_CONTACT, AD_STATUS,
+                AD_DATEOFBIRTH,AD_HOUSENUMBER, 
+            ) VALUES (
+               ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
+            )");
+                    $stmt->bind_param(
+                        'sssssssssssssssss',
+                        $firstName,
+                        $lastName,
+                        $country,
+                        $city,
+                        $subCity,
+                        $qualification,
+                        $salary,
+                        $position,
+                        $email,
+                        $password,
+                        $gender,
+                        $areaCode1,
+                        $cellphone1,
+                        $areaCode2,
+                        $cellphone2,
+                        $emergencyAreaCode,
+                        $emergencyContact,
+                        $status,
+                        $dateOfBirth,
+                        $houseNumber
+                    );
                     $stmt->execute();
 
                     if ($stmt->affected_rows > 0) {
+
                         echo "<alert>Data inserted successfully!</alert>";
                     } else {
-                        echo "<alert>Error inserting data: </alert>" . $stmt->error;
+                        echo "<p>Error inserting data: " . $stmt->error . "</p>";
                     }
 
                     $stmt->close();

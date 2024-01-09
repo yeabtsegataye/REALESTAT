@@ -11,7 +11,7 @@ if (isset($_POST['submit'])) {
         $US_PASSWORD = $_POST['US_PASSWORD'];
 
         // Prepare and execute the SQL statement
-        $login = mysqli_prepare($conn, "SELECT * FROM USERS WHERE US_EMAIL=?");
+        $login = mysqli_prepare($conn, "SELECT * FROM users WHERE US_EMAIL=?");
         mysqli_stmt_bind_param($login, 's', $US_EMAIL);
         mysqli_stmt_execute($login);
 
