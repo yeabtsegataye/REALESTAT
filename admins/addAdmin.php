@@ -283,6 +283,8 @@
                 </body>
                 <?php
                 include '../config/config.php';
+                ?>
+                <?php
 
                 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                     // Assuming you have received form data and stored them in variables
@@ -297,11 +299,8 @@
                     $email = $_POST['AD_EMAIL'];
                     $password = $_POST['AD_PASSWORD'];
                     $gender = $_POST['AD_SEX'];
-                    $areaCode1 = $_POST['areacode1'];
                     $cellphone1 = $_POST['AD_CELLPHONE1'];
-                    $areaCode2 = $_POST['areacode2'];
                     $cellphone2 = $_POST['AD_CELLPHONE2'];
-                    $emergencyAreaCode = $_POST['emergencyareacode'];
                     $emergencyContact = $_POST['AD_EMERGENCY_CONTACT'];
                     $status = $_POST['AD_STATUS'];
                     $dateOfBirth = $_POST['AD_DATEOFBIRTH'];
@@ -329,11 +328,8 @@
                         $email,
                         $password,
                         $gender,
-                        $areaCode1,
                         $cellphone1,
-                        $areaCode2,
                         $cellphone2,
-                        $emergencyAreaCode,
                         $emergencyContact,
                         $status,
                         $dateOfBirth,
