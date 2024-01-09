@@ -1,4 +1,3 @@
-
 <?php require "config/config.php"; ?>
 <?php
 session_start();
@@ -104,8 +103,9 @@ if (isset($_POST['submit'])) {
                                                 placeholder="Enter Email Address...">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name='US_PASSWORD' class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password">
+                                            <input type="password" name='US_PASSWORD'
+                                                class="form-control form-control-user" id="exampleInputPassword"
+                                                placeholder="Password">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -114,9 +114,18 @@ if (isset($_POST['submit'])) {
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <a href=""> 
-                                          <input type='submit' name='submit' class="btn btn-primary btn-user btn-block"
-                                            value='Login' />
+                                        <div class="form-group">
+                                            <label for="loginAs">Login As:</label>
+                                            <select class="form-control" id="loginAs" name="loginAs">
+                                                <option value="admin">Login as Admin</option>
+                                                <option value="employee">Login as Employee</option>
+                                                <option value="user">Login as User</option>
+                                            </select>
+                                        </div>
+
+                                        <a href="">
+                                            <input type='submit' name='submit'
+                                                class="btn btn-primary btn-user btn-block" value='Login' />
                                         </a>
                                         <hr>
                                         <!-- <a href="index.html" class="btn btn-google btn-user btn-block">
