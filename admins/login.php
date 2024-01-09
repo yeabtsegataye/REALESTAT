@@ -1,22 +1,48 @@
-<?php
-  if(isset($_POST['submitl'])){
+<?php require "../config/config.php"; ?>
+<?php session_start();
 
-    if(empty($_POST['email']) OR empty($_POST['password'])){
-      echo "<script>alert('some inputs are empty'); </script>";
-    } else{
-      $email = $_POST['email'];
-      $password = ($_POST['password']);
- 
+if (isset($_POST['submit'])) {
+    if (empty($_POST['AD_EMAIL']) || empty($_POST['AD_PASSWORD'])) {
+        echo "<script>alert('Some inputs are empty');</script>";
+    } else {
+        $AD_EMAIL = $_POST['AD_EMAIL'];
+        $AD_PASSWORD = $_POST['AD_PASSWORD'];
 
-      
-      if(strlen($password) < 8){
-        echo "<script>alert('password field is inncorect');</script>";
-      }else{
-        echo "<script>alert('logged in successfully');</script>";
-        
-      
-       header("Location: index.php");
-      }
+        // Prepare and execute the SQL statement
+        $login = mysqli_prepare($conn, "SELECT * FROM ADMIN WHERE AD_EMAIL=?");
+        mysqli_stmt_bind_param($login, 's', $AD_EMAIL);
+        mysqli_stmt_execute($login);
+
+        // Get the result
+        $result = mysqli_stmt_get_result($login);
+        $fetch = mysqli_fetch_assoc($result);
+
+        if ($fetch) {
+            // Debugging: Print out the hashed password from the database
+            $hashed_password_from_db = $fetch['AD_PASSWORD'];
+            echo "Hashed Password from Database: $hashed_password_from_db";
+
+            echo "Password Verify Result: " . (password_verify($AD_PASSWORD, $hashed_password_from_db) ? 'true' : 'false');
+
+
+            if (password_verify($AD_PASSWORD, $hashed_password_from_db)) {
+                $_SESSION['AD_FNAME'] = $fetch['AD_FNAME'];
+                $_SESSION['AD_LNAME'] = $fetch['ADD_LNAME'];
+                $_SESSION['AD_EMAIL'] = $fetch['AD_EMAIL'];
+                $_SESSION['AD_ID'] = $fetch['AD_ID'];
+
+                header("location: index.php");
+                exit;
+            } else {
+                echo "<script>alert('Password is not correct');</script>";
+            }
+        } else {
+            echo "<script>alert('Email does not exist');</script>";
+        }
+
+        // Close the statement and connection
+        mysqli_stmt_close($login);
+        mysqli_close($conn);
     }
 }
 ?>
@@ -68,25 +94,25 @@
                                     </div>
                                     <form action="login.php" method="POST" class="user">
                                         <div class="form-group">
-                                            <input type="email" name='email' class="form-control form-control-user"
+                                            <input type="email" name='AD_EMAIL' class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
                                                 placeholder="Enter Email Address...">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name='password' class="form-control form-control-user"
+                                            <input type="password" name='AD_PASSWORD' class="form-control form-control-user"
                                                 id="exampleInputPassword" placeholder="Password">
                                         </div>
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck">
                                                 <label class="custom-control-label" for="customCheck">Remember
                                                     Me</label>
                                             </div>
-                                        </div>
-                                        <a href="../index.php" name='submitl' class="btn btn-primary btn-user btn-block">
+                                        </div> -->
+                                        <a href="index.php" name='submitl' class="btn btn-primary btn-user btn-block">
                                             Login
                                         </a>
-                                        <hr>
+                                        <!-- <hr> -->
                                         <!-- <a href="index.html" class="btn btn-google btn-user btn-block">
                                             <i class="fab fa-google fa-fw"></i> Login with Google
                                         </a>
@@ -94,13 +120,13 @@
                                             <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                                         </a> -->
                                     </form>
-                                    <hr>
-                                    <div class="text-center">
+                                    <!-- <hr> -->
+                                    <!-- <div class="text-center">
                                         <a class="small" href="forgot-password.html">Forgot Password?</a>
                                     </div>
                                     <div class="text-center">
                                         <a class="small" href="register.php">Create an Account!</a>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,64 @@
 <?php require "header.php"; ?>
 
+<?php
+include '../config/config.php';
+?>
+<?php
+if (isset($_POST['submit'])) {
+    if (empty($_POST['AD_FNAME']) || empty($_POST['AD_LNAME']) || empty($_POST['AD_EMAIL']) || empty($_POST['AD_PASSWORD'])) {
+        echo "<script>alert('Name, email and password fields are required');</script>";
+    }else{
+    $firstName = $_POST['AD_FNAME'];
+    $lastName = $_POST['AD_LNAME'];
+    $country = $_POST['AD_COUNTRY'];
+    $city = $_POST['AD_CITY'];
+    $subCity = $_POST['AD_SUBCITY'];
+    $qualification = $_POST['AD_QULAIFICATION'];
+    $salary = $_POST['AD_SALARY'];
+    $position = $_POST['AD_POSITION'];
+    $email = $_POST['AD_EMAIL'];
+    $password = $_POST['AD_PASSWORD'];
+    $gender = $_POST['AD_SEX'];
+    $cellphone1 = $_POST['AD_CELLPHONE1'];
+    $cellphone2 = $_POST['AD_CELLPHONE2'];
+    $emergencyContact = $_POST['AD_EMERGENCY_CONTACT'];
+    $status = $_POST['AD_STATUS'];
+    $dateOfBirth = $_POST['AD_DATEOFBIRTH'];
+    $houseNumber = $_POST['AD_HOUSENUMBER'];
+    
+    $stmt = mysqli_prepare($conn, "INSERT INTO admin(AD_FNAME, AD_LNAME, AD_COUNTRY, AD_CITY,AD_SUBCITY, AD_QULAIFICATION, AD_SALARY, AD_POSITION, AD_EMAIL, AD_PASSWORD, AD_SEX, AD_CELLPHONE1, AD_CELLPHONE2, AD_EMERGENCY_CONTACT, AD_STATUS, AD_DATEOFBIRTH, AD_HOUSENUMBER) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param(
+                $stmt, 'sssssssssssssssss', //the datatypes for the to be field values will gonna be string, string, string and string
+                $firstName,
+                $lastName,
+                $country,
+                $city,
+                $subCity,
+                $qualification,
+                $salary,
+                $position,
+                $email,
+                $gender,
+                $cellphone1,
+                $cellphone2,
+                $emergencyContact,
+                $status,
+                $dateOfBirth,
+                $houseNumber,
+                password_hash($password, PASSWORD_DEFAULT)
+            );
+            mysqli_stmt_execute($stmt);
+            if (mysqli_affected_rows($conn) > 0) {
+                echo "<script>alert('Admin added successfully!');</script>";
+                header("location: index.php");
+            } else {
+                echo "<script>alert('Error adding admin');</script>";
+            }
+    }
+}
+
+?>
+
 <!-- Page Wrapper -->
 <div id="wrapper">
     <style>
@@ -66,19 +125,16 @@
 
         </li>
         <li class="nav-item">
-
             <a class="nav-link" href="addProperty.php">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Manage Property</span></a>
         </li>
         <li class="nav-item">
-
             <a class="nav-link" href="scadule.php">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Assign Scadule</span></a>
         </li>
         <li class="nav-item">
-
             <a class="nav-link" href="addAdmin.php">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Add Admin</span></a>
@@ -231,17 +287,17 @@
                                 <div class="formbold-mb-3 formbold-input-wrapp">
                                     <label for="phone1" class="formbold-form-label">Phone 1</label>
                                     <div>
-                                        <input type="text" name="areacode1" id="areacode1" placeholder="Area code"
-                                            class="formbold-form-input formbold-w-45" />
-                                        <input type="text" name="AD_CELLPHONE1" id="EM_CELLPHONE1"
+                                        <!-- <input type="text" name="areacode1" id="areacode1" placeholder="Area code"
+                                            class="formbold-form-input formbold-w-45" /> -->
+                                        <input type="text" name="AD_CELLPHONE1" id="ad_CELLPHONE1"
                                             placeholder="Phone number" class="formbold-form-input" />
                                     </div>
                                 </div>
                                 <div class="formbold-mb-3 formbold-input-wrapp">
                                     <label for="phone2" class="formbold-form-label">Phone 2</label>
                                     <div>
-                                        <input type="text" name="areacode2" id="areacode2" placeholder="Area code"
-                                            class="formbold-form-input formbold-w-45" />
+                                        <!-- <input type="text" name="areacode2" id="areacode2" placeholder="Area code"
+                                            class="formbold-form-input formbold-w-45" /> -->
                                         <input type="text" name="AD_CELLPHONE2" id="EM_CELLPHONE2"
                                             placeholder="Phone number" class="formbold-form-input" />
                                     </div>
@@ -276,78 +332,12 @@
                                     <input type="file" name="AD_PICTURE" id="uploadEmployeePic"
                                         class="formbold-form-file" />
                                 </div>
-                                <input class="formbold-btn" type="submit">
+                                <input class="formbold-btn" name='submit' type="submit">
                             </form>
                         </div>
                     </div> <!-- Include your footer or additional scripts here -->
                 </body>
-                <?php
-include '../config/config.php';
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Assuming you have received form data and stored them in variables
-    $firstName = $_POST['AD_FNAME'];
-    $lastName = $_POST['AD_LNAME'];
-    $country = $_POST['AD_COUNTRY'];
-    $city = $_POST['AD_CITY'];
-    $subCity = $_POST['AD_SUBCITY'];
-    $qualification = $_POST['AD_QULAIFICATION'];
-    $salary = $_POST['AD_SALARY'];
-    $position = $_POST['AD_POSITION'];
-    $email = $_POST['AD_EMAIL'];
-    $password = $_POST['AD_PASSWORD'];
-    $gender = $_POST['AD_SEX'];
-    $cellphone1 = $_POST['AD_CELLPHONE1'];
-    $cellphone2 = $_POST['AD_CELLPHONE2'];
-    $emergencyContact = $_POST['AD_EMERGENCY_CONTACT'];
-    $status = $_POST['AD_STATUS'];
-    $dateOfBirth = $_POST['AD_DATEOFBIRTH'];
-    $houseNumber = $_POST['AD_HOUSENUMBER'];
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Insert data into the database
-    $stmt = $conn->prepare("INSERT INTO admins (
-        AD_FNAME, AD_LNAME, AD_COUNTRY, AD_CITY, AD_SUBCITY,
-        AD_QULAIFICATION, AD_SALARY, AD_POSITION, AD_EMAIL, AD_PASSWORD,
-        AD_SEX, AD_CELLPHONE1, AD_CELLPHONE2, AD_EMERGENCY_CONTACT, AD_STATUS,
-        AD_DATEOFBIRTH, AD_HOUSENUMBER
-    ) VALUES (
-        ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
-    )");
-
-    $stmt->bind_param(
-        'ssssssssssssssss',
-        $firstName,
-        $lastName,
-        $country,
-        $city,
-        $subCity,
-        $qualification,
-        $salary,
-        $position,
-        $email,
-        $password,
-        $gender,
-        $cellphone1,
-        $cellphone2,
-        $emergencyContact,
-        $status,
-        $dateOfBirth,
-        $houseNumber
-    );
-    if ($stmt->execute()) {
-        echo "<alert>Data inserted successfully!</alert>";
-    } else {
-        echo "<p>Error inserting data: " . $stmt->error . "</p>";
-    }
-
-    $stmt->close();
-    $conn->close();
-}
-?>
+                
             </div>
             <!-- /.container-fluid -->
 
@@ -363,10 +353,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </footer>
         <!-- End of Footer -->
-
     </div>
     <!-- End of Content Wrapper -->
-
 </div>
 <!-- End of Page Wrapper -->
 
