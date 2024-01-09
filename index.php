@@ -195,36 +195,35 @@
 // Connect to your database
 include './config/config.php';
 
-
 // Fetch data from the category table
-$sql = "SELECT CAT_ID, CAT_NAME, CAT_TYPE, CAT_DESCRIPTION FROM category";
+$sql = "SELECT CAT_ID, CAT_NAME, CAT_TYPE, CAT_DESCRIPTION, CAT_PIC FROM category";
 $result = mysqli_query($conn, $sql);
 
-// Display the fetched data within the HTML structure
-if (mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-?>
-        <div class="box m-1 p-3"  style="box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
-            <a href="catDetails.php?cat_id=<?php echo $row['CAT_ID']; ?>" class="">
-                <div class="img-box">
-                    <img src="images/s-1.jpg" alt=""> </div>
-                <div class="detail-box">
-                    <h6><?php echo $row['CAT_NAME']; ?></h6>
-                    <p><?php echo $row['CAT_DESCRIPTION']; ?></p> 
-                    <a href="catDetails.php?cat_id=<?php echo $row['CAT_ID']; ?>" class="btn btn-primary">See more</a>
+// Convert the result set into an array
+$rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-                </div>
-            </a>
-        </div>
+// Display the fetched data within the HTML structure using foreach
+foreach ($rows as $row) {
+?>
+    <div class="box m-1 p-3" style="box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
+        <a href="catDetails.php?cat_id=<?php echo $row['CAT_ID']; ?>" class="">
+            <div class="img-box">
+                <img src="./admins/img/<?php echo $row['CAT_PIC']; ?>" alt="">
+            </div>
+            <div class="detail-box">
+                <h6><?php echo $row['CAT_NAME']; ?></h6>
+                <p><?php echo $row['CAT_DESCRIPTION']; ?></p>
+                <a href="catDetails.php?cat_id=<?php echo $row['CAT_ID']; ?>" class="btn btn-primary">See more</a>
+            </div>
+        </a>
+    </div>
 <?php
-    }
-} else {
-    echo "No categories found.";
 }
 
 // Close the database connection
 mysqli_close($conn);
 ?>
+
 
         
         </div>

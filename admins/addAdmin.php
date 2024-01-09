@@ -336,8 +336,7 @@ if (isset($_POST['submit'])) {
                             </form>
                         </div>
                     </div> <!-- Include your footer or additional scripts here -->
-                </body>
-                
+              </body>
             </div>
             <!-- /.container-fluid -->
 
