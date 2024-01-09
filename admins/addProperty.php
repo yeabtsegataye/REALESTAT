@@ -246,13 +246,20 @@
                   </div>
 
                 </div>
+                <hr>
                 <div class="formbold-form-file-flex">
                   <label for="upload" class="formbold-form-label">
                     Upload Picture
                   </label>
                   <input type="file" name="upload" id="upload" class="formbold-form-file" />
                 </div>
-
+                    <hr>
+                    <div class="formbold-form-file-flex">
+                  <label for="uploadG" class="formbold-form-label">
+                    Upload Gallery Pictures
+                  </label>
+                  <input type="file" name="uploadG" id="uploadG" class="formbold-form-file" multiple/>
+                </div>
                 <button class="formbold-btn" type="submit">Add Item</button>
               </form>
             </div>
@@ -272,7 +279,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $RN_SERVICE = $_POST['RN_SERVICE'];
         $RN_BATHROOM = $_POST['RN_BATHROOM'];
 
-        $pr_pic = $_POST["PR_PIC"];
+        $pr_pic = $_FILES["PR_PIC"];
         $pr_type = $_POST["PR_TYPE"];
         $pr_location = $_POST["PR_LOCATION"];
         $pr_price = $_POST["PR_PRICE"];
@@ -287,31 +294,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pr_city = $_POST["PR_CITY"];
         $pr_name = $_POST["PR_NAME"];
 
-        $sql = "INSERT INTO property (PR_PIC, PR_TYPE, PR_LOCATION, PR_PRICE, PR_DESCRIPTION, PR_SQFT, PR_YEAROFBUILD, PR_FEATURES, PR_STATUS, RN_ID, CAT_ID, CREATED_AT, PR_CITY, PR_NAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+          if ($_FILES["upload"]["error"] == 4) {
+              echo "<script> alert('Image Does Not Exist'); </script>";
+          } else {
+              $fileName = $_FILES["upload"]["name"];
+              $fileSize = $_FILES["upload"]["size"];
+              $tmpName = $_FILES["upload"]["tmp_name"];
+  
+              $validImageExtension = ['jpg', 'jpeg', 'png'];
+              $imageExtension = explode('.', $fileName);
+              $imageExtension = strtolower(end($imageExtension));
+  
+              if (!in_array($imageExtension, $validImageExtension)) {
+                  echo "<script>alert('Invalid Image Extension');</script>";
+              } else if ($fileSize > 1000000) {
+                  echo "<script>alert('Image Size Is Too Large');</script>";
+              } else {
+                  $newImageName = uniqid() . '.' . $imageExtension;
+  
+                  // Check if the upload directory exists, create it if not
+                  $uploadDirectory = 'Pimg/';
+                  if (!is_dir($uploadDirectory)) {
+                      mkdir($uploadDirectory, 0777, true);
+                  }
+  
+                  $destination = $uploadDirectory . $newImageName;
+  
+                  if (move_uploaded_file($tmpName, $destination)) {
+                      $sql = "INSERT INTO property (PR_PIC, PR_TYPE, PR_LOCATION, PR_PRICE, PR_DESCRIPTION, PR_SQFT, PR_YEAROFBUILD, PR_FEATURES, PR_STATUS, RN_ID, CAT_ID, CREATED_AT, PR_CITY, PR_NAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        $stmt = mysqli_prepare($conn, $sql);
+                      $stmt = mysqli_prepare($conn, $sql);
+              
+                      mysqli_stmt_bind_param($stmt, "sssssssssiisss", $pr_pic, $pr_type, $pr_location, $pr_price, $pr_description, $pr_sqft, $pr_yearofbuild, $pr_features, $pr_status, $rn_id, $cat_id, $created_at, $pr_city, $pr_name);
+              
+                      if (mysqli_stmt_execute($stmt)) {
+                          // Retrieve the last inserted property id
+                          $PR_ID = mysqli_insert_id($conn);
+                          echo "Property record inserted successfully";
+                           // Assuming you have a foreign key column in the room table named 'PR_ID'
+                          $sql = "INSERT INTO room_num (PR_ID, RN_SALON, RN_BEDROOM, RN_KITCHEN, RN_SERVICE, RN_BATHROOM) VALUES (?, ?, ?, ?, ?, ?)";
 
-        mysqli_stmt_bind_param($stmt, "sssssssssiisss", $pr_pic, $pr_type, $pr_location, $pr_price, $pr_description, $pr_sqft, $pr_yearofbuild, $pr_features, $pr_status, $rn_id, $cat_id, $created_at, $pr_city, $pr_name);
+                          $stmt = mysqli_prepare($conn, $sql);
+                          mysqli_stmt_bind_param($stmt, 'isssss', $PR_ID, $RN_SALON, $RN_BEDROOM, $RN_KITCHEN, $RN_SERVICE, $RN_BATHROOM);
 
-        if (mysqli_stmt_execute($stmt)) {
-            // Retrieve the last inserted property id
-            $PR_ID = mysqli_insert_id($conn);
-            echo "Property record inserted successfully";
+                          if (mysqli_stmt_execute($stmt)) {
+                              echo "Room record inserted successfully";
+                          } else {
+                              echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+                          }
+                      } else {
+                          echo "<script>alert('Error moving file to destination');</script>";
+                      }
+              }
+          }
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
 
-            // Assuming you have a foreign key column in the room table named 'PR_ID'
-            $sql = "INSERT INTO room_num (PR_ID, RN_SALON, RN_BEDROOM, RN_KITCHEN, RN_SERVICE, RN_BATHROOM) VALUES (?, ?, ?, ?, ?, ?)";
-
-            $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, 'isssss', $PR_ID, $RN_SALON, $RN_BEDROOM, $RN_KITCHEN, $RN_SERVICE, $RN_BATHROOM);
-
-            if (mysqli_stmt_execute($stmt)) {
-                echo "Room record inserted successfully";
-            } else {
-                echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-            }
             ////////////////////
             try {
-                $uploadDirectory = 'img/';
+                $uploadDirectory = 'Gimg/';
                 $uploadedImageNames = [];
 
                 for ($i = 1; $i <= 8; $i++) {

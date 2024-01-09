@@ -5,30 +5,38 @@ include '../config/config.php';
 ?>
 <?php
 if (isset($_POST['submit'])) {
+    // Check if required fields are empty
     if (empty($_POST['AD_FNAME']) || empty($_POST['AD_LNAME']) || empty($_POST['AD_EMAIL']) || empty($_POST['AD_PASSWORD'])) {
-        echo "<script>alert('Name, email and password fields are required');</script>";
-    }else{
-    $firstName = $_POST['AD_FNAME'];
-    $lastName = $_POST['AD_LNAME'];
-    $country = $_POST['AD_COUNTRY'];
-    $city = $_POST['AD_CITY'];
-    $subCity = $_POST['AD_SUBCITY'];
-    $qualification = $_POST['AD_QULAIFICATION'];
-    $salary = $_POST['AD_SALARY'];
-    $position = $_POST['AD_POSITION'];
-    $email = $_POST['AD_EMAIL'];
-    $password = $_POST['AD_PASSWORD'];
-    $gender = $_POST['AD_SEX'];
-    $cellphone1 = $_POST['AD_CELLPHONE1'];
-    $cellphone2 = $_POST['AD_CELLPHONE2'];
-    $emergencyContact = $_POST['AD_EMERGENCY_CONTACT'];
-    $status = $_POST['AD_STATUS'];
-    $dateOfBirth = $_POST['AD_DATEOFBIRTH'];
-    $houseNumber = $_POST['AD_HOUSENUMBER'];
-    
-    $stmt = mysqli_prepare($conn, "INSERT INTO admin(AD_FNAME, AD_LNAME, AD_COUNTRY, AD_CITY,AD_SUBCITY, AD_QULAIFICATION, AD_SALARY, AD_POSITION, AD_EMAIL, AD_PASSWORD, AD_SEX, AD_CELLPHONE1, AD_CELLPHONE2, AD_EMERGENCY_CONTACT, AD_STATUS, AD_DATEOFBIRTH, AD_HOUSENUMBER) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        echo "<script>alert('Name, email, and password fields are required');</script>";
+    } else {
+        // Assign values to variables
+        $firstName = $_POST['AD_FNAME'];
+        $lastName = $_POST['AD_LNAME'];
+        $country = $_POST['AD_COUNTRY'];
+        $city = $_POST['AD_CITY'];
+        $subCity = $_POST['AD_SUBCITY'];
+        $qualification = $_POST['AD_QULAIFICATION'];
+        $salary = $_POST['AD_SALARY'];
+        $position = $_POST['AD_POSITION'];
+        $email = $_POST['AD_EMAIL'];
+        $password = password_hash($_POST['AD_PASSWORD'], PASSWORD_DEFAULT);
+        $gender = $_POST['AD_SEX'];
+        $cellphone1 = $_POST['AD_CELLPHONE1'];
+        $cellphone2 = $_POST['AD_CELLPHONE2'];
+        $emergencyContact = $_POST['AD_EMERGENCY_CONTACT'];
+        $status = $_POST['AD_STATUS'];
+        $dateOfBirth = $_POST['AD_DATEOFBIRTH'];
+        $houseNumber = $_POST['AD_HOUSENUMBER'];
+
+        // Prepare the SQL statement
+        $stmt = mysqli_prepare($conn, "INSERT INTO admin(AD_FNAME, AD_LNAME, AD_COUNTRY, AD_CITY, AD_SUBCITY, AD_QULAIFICATION, AD_SALARY, AD_POSITION, AD_EMAIL, AD_PASSWORD, AD_SEX, AD_CELLPHONE1, AD_CELLPHONE2, AD_EMERGENCY_CONTACT, AD_STATUS, AD_DATEOFBIRTH, AD_HOUSENUMBER) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        // Check if the prepare statement was successful
+        if ($stmt) {
+            // Bind parameters
             mysqli_stmt_bind_param(
-                $stmt, 'sssssssssssssssss', //the datatypes for the to be field values will gonna be string, string, string and string
+                $stmt,
+                'sssssssssssssssss', // 17 "s" for 17 placeholders
                 $firstName,
                 $lastName,
                 $country,
@@ -38,26 +46,36 @@ if (isset($_POST['submit'])) {
                 $salary,
                 $position,
                 $email,
+                $password,
                 $gender,
                 $cellphone1,
                 $cellphone2,
                 $emergencyContact,
                 $status,
                 $dateOfBirth,
-                $houseNumber,
-                password_hash($password, PASSWORD_DEFAULT)
+                $houseNumber
             );
+
+            // Execute the statement
             mysqli_stmt_execute($stmt);
+
+            // Check for successful insertion
             if (mysqli_affected_rows($conn) > 0) {
                 echo "<script>alert('Admin added successfully!');</script>";
                 header("location: index.php");
             } else {
                 echo "<script>alert('Error adding admin');</script>";
             }
+
+            // Close the statement
+            mysqli_stmt_close($stmt);
+        } else {
+            echo "Error in preparing statement: " . mysqli_error($conn);
+        }
     }
 }
-
 ?>
+
 
 <!-- Page Wrapper -->
 <div id="wrapper">
