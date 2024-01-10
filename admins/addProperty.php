@@ -72,10 +72,10 @@
     </li>
     <li class="nav-item">
 
-<a class="nav-link" href="addAdmin.php">
-    <i class="fas fa-fw fa-table"></i>
-    <span>Add Admin</span></a>
-</li>
+      <a class="nav-link" href="addAdmin.php">
+        <i class="fas fa-fw fa-table"></i>
+        <span>Add Admin</span></a>
+    </li>
     <li class="nav-item">
       <a class="nav-link" href="../index.php">
         <i class="fas fa-fw fa-table"></i>
@@ -134,7 +134,7 @@
             <!-- Learn More: https://formbold.com -->
             <div class="formbold-form-wrapper">
               <!-- <img src="your-image-here.jpg"> -->
-              <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
+              <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" enctype="multipart/form-data">
                 <div class="formbold-input-flex">
                   <div>
                     <label for="PR_TYPE" class="formbold-form-label"> Property Type </label>
@@ -167,7 +167,7 @@
 
                   <div>
                     <?php
-                    include '../config/config.php';
+                    include_once '../config/config.php';
                     $sql = "SELECT CAT_ID, CAT_NAME FROM category";
                     $result = $conn->query($sql);
 
@@ -246,21 +246,14 @@
                   </div>
 
                 </div>
-                <hr>
                 <div class="formbold-form-file-flex">
-                  <label for="upload" class="formbold-form-label">
-                    Upload Picture
-                  </label>
-                  <input type="file" name="upload" id="upload" class="formbold-form-file" />
-                </div>
-                    <hr>
-                    <div class="formbold-form-file-flex">
-                  <label for="uploadG" class="formbold-form-label">
-                    Upload Gallery Pictures
-                  </label>
-                  <input type="file" name="uploadG" id="uploadG" class="formbold-form-file" multiple/>
-                </div>
-                <button class="formbold-btn" type="submit">Add Item</button>
+          <label for="upload" class="formbold-form-label">
+            Upload Picture
+          </label>
+          <input type="file" name="upload" id="upload" class="formbold-form-file" />
+        </div>
+
+        <button class="formbold-btn" name="submit">Add Property</button>
               </form>
             </div>
           </div>
@@ -270,176 +263,92 @@
       <!-- /.container-fluid -->
     </div>
     <!-- End of Main Content -->
-    <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST" $$ isset($_POST)) {
-    if (!empty($_POST)) {
-        $RN_SALON = $_POST['RN_SALON'];
-        $RN_BEDROOM = $_POST['RN_BEDROOM'];
-        $RN_KITCHEN = $_POST['RN_KITCHEN'];
-        $RN_SERVICE = $_POST['RN_SERVICE'];
-        $RN_BATHROOM = $_POST['RN_BATHROOM'];
-
-        $pr_pic = $_FILES["PR_PIC"];
-        $pr_type = $_POST["PR_TYPE"];
-        $pr_location = $_POST["PR_LOCATION"];
-        $pr_price = $_POST["PR_PRICE"];
-        $pr_description = $_POST["PR_DESCRIPTION"];
-        $pr_sqft = $_POST["PR_SQFT"];
-        $pr_yearofbuild = $_POST["PR_YEAROFBUILD"];
-        $pr_features = $_POST["PR_FEATURES"];
-        $pr_status = $_POST["PR_STATUS"];
-        $rn_id = $_POST["RN_ID"];
-        $cat_id = $_POST["CAT_ID"];
-        $created_at = $_POST["CREATED_AT"];
-        $pr_city = $_POST["PR_CITY"];
-        $pr_name = $_POST["PR_NAME"];
-
-        $dir = 'thumbnail/' . basename($pr_pic);
-        $sql = "INSERT INTO property (PR_PIC, PR_TYPE, PR_LOCATION, PR_PRICE, PR_DESCRIPTION, PR_SQFT, PR_YEAROFBUILD, PR_FEATURES, PR_STATUS, RN_ID, CAT_ID, CREATED_AT, PR_CITY, PR_NAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
 
 
 
-
-
-//         try {
-//           if ($_FILES["upload"]["error"] == 4) {
-//               echo "<script> alert('Image Does Not Exist'); </script>";
-//           } else {
-//               $fileName = $_FILES["upload"]["name"];
-//               $fileSize = $_FILES["upload"]["size"];
-//               $tmpName = $_FILES["upload"]["tmp_name"];
-  
-//               $validImageExtension = ['jpg', 'jpeg', 'png'];
-//               $imageExtension = explode('.', $fileName);
-//               $imageExtension = strtolower(end($imageExtension));
-  
-//               if (!in_array($imageExtension, $validImageExtension)) {
-//                   echo "<script>alert('Invalid Image Extension');</script>";
-//               } else if ($fileSize > 1000000) {
-//                   echo "<script>alert('Image Size Is Too Large');</script>";
-//               } else {
-//                   $newImageName = uniqid() . '.' . $imageExtension;
-  
-//                   // Check if the upload directory exists, create it if not
-//                   $uploadDirectory = 'Pimg/';
-//                   if (!is_dir($uploadDirectory)) {
-//                       mkdir($uploadDirectory, 0777, true);
-//                   }
-  
-//                   $destination = $uploadDirectory . $newImageName;
-  
-//                   if (move_uploaded_file($tmpName, $destination)) {
-//                       $sql = "INSERT INTO property (PR_PIC, PR_TYPE, PR_LOCATION, PR_PRICE, PR_DESCRIPTION, PR_SQFT, PR_YEAROFBUILD, PR_FEATURES, PR_STATUS, RN_ID, CAT_ID, CREATED_AT, PR_CITY, PR_NAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-//                       $stmt = mysqli_prepare($conn, $sql);
-              
-//                       mysqli_stmt_bind_param($stmt, "sssssssssiisss", $pr_pic, $pr_type, $pr_location, $pr_price, $pr_description, $pr_sqft, $pr_yearofbuild, $pr_features, $pr_status, $rn_id, $cat_id, $created_at, $pr_city, $pr_name);
-              
-//                       if (mysqli_stmt_execute($stmt)) {
-//                           // Retrieve the last inserted property id
-//                           $PR_ID = mysqli_insert_id($conn);
-//                           echo "Property record inserted successfully";
-//                            // Assuming you have a foreign key column in the room table named 'PR_ID'
-//                           $sql = "INSERT INTO room_num (PR_ID, RN_SALON, RN_BEDROOM, RN_KITCHEN, RN_SERVICE, RN_BATHROOM) VALUES (?, ?, ?, ?, ?, ?)";
-
-//                           $stmt = mysqli_prepare($conn, $sql);
-//                           mysqli_stmt_bind_param($stmt, 'isssss', $PR_ID, $RN_SALON, $RN_BEDROOM, $RN_KITCHEN, $RN_SERVICE, $RN_BATHROOM);
-
-//                           if (mysqli_stmt_execute($stmt)) {
-//                               echo "Room record inserted successfully";
-//                           } else {
-//                               echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-//                           }
-//                       } else {
-//                           echo "<script>alert('Error moving file to destination');</script>";
-//                       }
-//               }
-//           }
-//         } catch (Exception $e) {
-//             echo "Error: " . $e->getMessage();
-//         }
-
-//             ////////////////////
-//             try {
-//                 $uploadDirectory = 'Gimg/';
-//                 $uploadedImageNames = [];
-
-//                 for ($i = 1; $i <= 8; $i++) {
-//                     $inputName = "upload" . $i;
-
-//                     if ($_FILES[$inputName]["error"] == 4) {
-//                         continue; // Image does not exist, move to the next one
-//                     }
-
-//                     $fileName = $_FILES[$inputName]["name"];
-//                     $fileSize = $_FILES[$inputName]["size"];
-//                     $tmpName = $_FILES[$inputName]["tmp_name"];
-
-//                     $validImageExtension = ['jpg', 'jpeg', 'png'];
-//                     $imageExtension = explode('.', $fileName);
-//                     $imageExtension = strtolower(end($imageExtension));
-
-//                     if (!in_array($imageExtension, $validImageExtension)) {
-//                         echo "<script>alert('Invalid Image Extension');</script>";
-//                     } elseif ($fileSize > 1000000) {
-//                         echo "<script>alert('Image Size Is Too Large');</script>";
-//                     } else {
-//                         $newImageName = uniqid() . '.' . $imageExtension;
-//                         $destination = $uploadDirectory . $newImageName;
-
-//                         if (move_uploaded_file($tmpName, $destination)) {
-//                             $uploadedImageNames[] = $newImageName;
-//                         } else {
-//                             echo "<script>alert('Error moving file to destination');</script>";
-//                         }
-//                     }
-//                 }
-
-//                 // Insert uploaded image names into the database
-//                 $query = "INSERT INTO property_pic (PP_PIC_1, PP_PIC_2, PP_PIC_3, PP_PIC_4, PP_PIC_5, PP_PIC_6, PP_PIC_7, PP_PIC_8, PR_ID) 
-//                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-//                 $stmt = mysqli_prepare($conn, $query);
-//                 $params = array_merge($uploadedImageNames, array_fill(0, 9 - count($uploadedImageNames), null), [$PR_ID]);
-
-//                 mysqli_stmt_bind_param($stmt, 'ssssssssi', ...$params);
-
-//                 if (mysqli_stmt_execute($stmt)) {
-//                     echo "<script>alert('Successfully Added');</script>";
-//                 } else {
-//                     echo "Error: " . $query . "<br>" . mysqli_error($conn);
-//                 }
-
-//                 mysqli_stmt_close($stmt);
-//             } catch (Exception $e) {
-//                 echo "Error: " . $e->getMessage();
-//             }
-//         } else {
-//             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-//         }
-
-//         mysqli_stmt_close($stmt);
-//     } else {
-//         echo "Form data is empty. Please submit the form.";
-     }
-}
-
-// mysqli_close($conn);
-
-?>
-
-  
     <!-- Footer -->
     <footer class="sticky-footer bg-white">
       <div class="container my-auto">
         <div class="copyright text-center my-auto">
-          <span>Copyright &copy; Your Website 2020</span>
+          <span>Copyright &copy; Your Website 2024</span>
         </div>
       </div>
     </footer>
     <!-- End of Footer -->
+    <?php
+// Include database configuration file
+include '../config/config.php';
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+  $RN_SALON = $_POST['RN_SALON'];
+  $RN_BEDROOM = $_POST['RN_BEDROOM'];
+  $RN_KITCHEN = $_POST['RN_KITCHEN'];
+  $RN_SERVICE = $_POST['RN_SERVICE'];
+  $RN_BATHROOM = $_POST['RN_BATHROOM'];
+
+  $pr_type = $_POST["PR_TYPE"];
+  $pr_location = $_POST["PR_LOCATION"];
+  $pr_price = $_POST["PR_PRICE"];
+  $pr_description = $_POST["PR_DESCRIPTION"];
+  $pr_sqft = $_POST["PR_SQFT"];
+  $pr_yearofbuild = $_POST["PR_YEAROFBUILD"];
+  $pr_features = $_POST["PR_FEATURES"];
+  $pr_status = $_POST["PR_STATUS"];
+  $cat_id = $_POST["CAT_ID"];
+  $pr_city = $_POST["PR_CITY"];
+  $pr_name = $_POST["PR_NAME"];
+
+    try {
+        if ($_FILES["upload"]["error"] == 4) {
+            echo "<script> alert('Image Does Not Exist'); </script>";
+        } else {
+            $fileName = $_FILES["upload"]["name"];
+            $fileSize = $_FILES["upload"]["size"];
+            $tmpName = $_FILES["upload"]["tmp_name"];
+
+            $validImageExtension = ['jpg', 'jpeg', 'png'];
+            $imageExtension = explode('.', $fileName);
+            $imageExtension = strtolower(end($imageExtension));
+
+            if (!in_array($imageExtension, $validImageExtension)) {
+                echo "<script>alert('Invalid Image Extension');</script>";
+            } else if ($fileSize > 1000000) {
+                echo "<script>alert('Image Size Is Too Large');</script>";
+            } else {
+                $newImageName = uniqid() . '.' . $imageExtension;
+
+                // Check if the upload directory exists, create it if not
+                $uploadDirectory = 'img/';
+                if (!is_dir($uploadDirectory)) {
+                    mkdir($uploadDirectory, 0777, true);
+                }
+
+                $destination = $uploadDirectory . $newImageName;
+
+                if (move_uploaded_file($tmpName, $destination)) {
+                  $query = "INSERT INTO property (PR_PIC, PR_TYPE, PR_LOCATION, PR_PRICE, PR_DESCRIPTION, PR_SQFT, PR_YEAROFBUILD, PR_FEATURES, PR_STATUS, CAT_ID, PR_CITY, PR_NAME) VALUES ('$newImageName', '$pr_type', '$pr_location', '$pr_price', '$pr_description', '$pr_sqft', '$pr_yearofbuild', '$pr_features', '$pr_status', '$cat_id', '$pr_city', '$pr_name')";
+                    mysqli_query($conn, $query);
+                    $PR_ID = mysqli_insert_id($conn);
+
+                    $sql = "INSERT INTO room_num (PR_ID, RN_SALON, RN_BEDROOM, RN_KITCHEN, RN_SERVICE, RN_BATHROOM) VALUES (?, ?, ?, ?, ?, ?)";
+                    $stmt = mysqli_prepare($conn, $sql);
+                    mysqli_stmt_bind_param($stmt, 'isssss', $PR_ID, $RN_SALON, $RN_BEDROOM, $RN_KITCHEN, $RN_SERVICE, $RN_BATHROOM);
+                    mysqli_stmt_execute($stmt);
+
+                    echo "<script>alert('Property record inserted successfully. PR_ID: " . $PR_ID . "');</script>";
+                  } else {
+                    echo "<script>alert('Error moving file to destination');</script>";
+                }
+            }
+        }
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
+
+// Close database connection
+mysqli_close($conn);
+?>
   </div>
   <!-- End of Content Wrapper -->
 
@@ -473,4 +382,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" $$ isset($_POST)) {
 <script src="js/demo/chart-bar-demo.js"></script>
 
 </body>
+
 </html>
