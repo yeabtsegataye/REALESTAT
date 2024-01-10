@@ -37,8 +37,7 @@ if (mysqli_num_rows($result) > 0) {
                     <div class="box m-1 p-3" style="box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
                         <a href="propertyDetails.php?pr_id=<?php echo $propertyData['PR_ID']; ?>" class="">
                             <div class="img-box">
-                                <img src="images/s-1.jpg" alt="">
-                                <!-- <img src="images/<?php echo $propertyData['PR_PIC']; ?>" alt=""> -->
+                            <img src="./admins/img/<?php echo $propertyData['PR_PIC']; ?>" alt="">
                             </div>
                             <div class="detail-box">
                                 <h6>

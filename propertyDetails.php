@@ -29,7 +29,7 @@ if (mysqli_num_rows($result) > 0) {
             <div class="slide-one-item home-slider owl-carousel">
 
               <div>
-                <img src="images/3.jpg" alt="Image" class="img-fluid" />
+              <img src="./admins/img/<?php echo $propertyData['PR_PIC']; ?>" alt="Image" class="img-fluid" />
               </div>
             </div>
           </div>
