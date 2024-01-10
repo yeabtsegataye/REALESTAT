@@ -28,53 +28,65 @@ if (isset($_POST['submit'])) {
         $dateOfBirth = $_POST['AD_DATEOFBIRTH'];
         $houseNumber = $_POST['AD_HOUSENUMBER'];
 
+        // // Validate phone numbers using regex
+        $phoneRegex = '/^\+[0-9]{3}\-[0-9]{3}\-[0-9]{3}\-[0-9]{4}$/';
+        if (!preg_match($phoneRegex, $cellphone1) || !preg_match($phoneRegex, $cellphone2)) {
+            echo "<script>alert('Invalid phone number format');</script>";
+            exit(); // Stop execution if phone number format is invalid
+        }
+
         // Prepare the SQL statement
         $stmt = mysqli_prepare($conn, "INSERT INTO admin(AD_FNAME, AD_LNAME, AD_COUNTRY, AD_CITY, AD_SUBCITY, AD_QULAIFICATION, AD_SALARY, AD_POSITION, AD_EMAIL, AD_PASSWORD, AD_SEX, AD_CELLPHONE1, AD_CELLPHONE2, AD_EMERGENCY_CONTACT, AD_STATUS, AD_DATEOFBIRTH, AD_HOUSENUMBER) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         // Check if the prepare statement was successful
         if ($stmt) {
-            // Bind parameters
-            mysqli_stmt_bind_param(
-                $stmt,
-                'sssssssssssssssss', // 17 "s" for 17 placeholders
-                $firstName,
-                $lastName,
-                $country,
-                $city,
-                $subCity,
-                $qualification,
-                $salary,
-                $position,
-                $email,
-                $password,
-                $gender,
-                $cellphone1,
-                $cellphone2,
-                $emergencyContact,
-                $status,
-                $dateOfBirth,
-                $houseNumber
-            );
+            try {
+                // Bind parameters
+                mysqli_stmt_bind_param(
+                    $stmt,
+                    'sssssssssssssssss',
+                    $firstName,
+                    $lastName,
+                    $country,
+                    $city,
+                    $subCity,
+                    $qualification,
+                    $salary,
+                    $position,
+                    $email,
+                    $password,
+                    $gender,
+                    $cellphone1,
+                    $cellphone2,
+                    $emergencyContact,
+                    $status,
+                    $dateOfBirth,
+                    $houseNumber
+                );
 
-            // Execute the statement
-            mysqli_stmt_execute($stmt);
+                // Execute the statement
+                mysqli_stmt_execute($stmt);
 
-            // Check for successful insertion
-            if (mysqli_affected_rows($conn) > 0) {
-                echo "<script>alert('Admin added successfully!');</script>";
-                header("location: index.php");
-            } else {
-                echo "<script>alert('Error adding admin');</script>";
+                // Check for successful insertion
+                if (mysqli_affected_rows($conn) > 0) {
+                    echo "<script>alert('Admin added successfully!');</script>";
+                    header("location: index.php");
+                } else {
+                    echo "<script>alert('Error adding admin');</script>";
+                }
+            } catch (Exception $e) {
+                echo "<script>alert('Error: " . $e->getMessage() . "');</script>";
+            } finally {
+                // Close the statement
+                mysqli_stmt_close($stmt);
             }
-
-            // Close the statement
-            mysqli_stmt_close($stmt);
         } else {
             echo "Error in preparing statement: " . mysqli_error($conn);
         }
     }
 }
 ?>
+
 
 
 <!-- Page Wrapper -->
@@ -323,8 +335,8 @@ if (isset($_POST['submit'])) {
                                 <div class="formbold-mb-3 formbold-input-wrapp">
                                     <label for="emergencyContact" class="formbold-form-label">Emergency Contact</label>
                                     <div>
-                                        <input type="text" name="emergencyareacode" id="emergencyContact1"
-                                            placeholder="Area code" class="formbold-form-input formbold-w-45" />
+                                        <!-- <input type="text" name="emergencyareacode" id="emergencyContact1"
+                                            placeholder="Area code" class="formbold-form-input formbold-w-45" /> -->
                                         <input type="text" name="AD_EMERGENCY_CONTACT" id="emergencyContact"
                                             placeholder="Phone number" class="formbold-form-input" />
                                     </div>
