@@ -57,16 +57,23 @@
               </button>
             </div>
             <div id="myNav" class="overlay">
-              <div class="overlay-content">
-                <a href="index.php">HOME</a>
-                <a href="about.php">ABOUT</a>
-                <a href="properties.php">PROPERTIES</a>
-                <a href="buy.php">BUY</a>
-                <a href="rent.php">RENT</a>
-                <a href="price.php">PRICING</a>
-                <a href="contact.php">CONTACT US</a>
-                <a href="./admins/index.php">Admin</a>
-              </div>
+            <div class="overlay-content">
+    <a href="index.php">HOME</a>
+    <a href="about.php">ABOUT</a>
+    <a href="properties.php">PROPERTIES</a>
+    <a href="buy.php">BUY</a>
+    <a href="rent.php">RENT</a>
+    <a href="price.php">PRICING</a>
+    <a href="contact.php">CONTACT US</a>
+    
+    <?php
+    // Check if the user is an admin (assuming 'admin' is the role for admins)
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+        echo '<a href="./admins/index.php">Admin</a>';
+    }
+    ?>
+</div>
+
             </div>
           </div>
         </nav>
