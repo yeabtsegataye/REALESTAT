@@ -3,8 +3,6 @@
 include './config/config.php';
 ?>
 <?php
-// Connect to database
-
 // Get property ID from URL or set a default
 $pr_id = isset($_GET['pr_id']) ? $_GET['pr_id'] : 1; // Replace 1 with a default ID if needed
 

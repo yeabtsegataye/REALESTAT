@@ -197,7 +197,7 @@
     </div>
   </div>
 
-  <?php
+<?php
 // Include database configuration file
 include '../config/config.php';
 
@@ -248,7 +248,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 }
 
 // Close database connection
-$conn->close();
+mysqli_close($conn);
 ?>
 </body>
 
