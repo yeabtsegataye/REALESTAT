@@ -7,20 +7,19 @@ include './config/config.php';
 $pr_id = isset($_GET['pr_id']) ? $_GET['pr_id'] : 1; // Replace 1 with a default ID if needed
 
 // Fetch property data and join rooms
-$sql = "SELECT 
-            property.PR_ID, property.PR_PRICE, property.PR_PIC, property.PR_YEAROFBUILD, property.PR_DESCRIPTION, property.PR_FEATURES, property.PR_SQFT, property.PR_TYPE, property.PR_STATUS, property.PR_LOCATION, property.PR_CITY,
-            room_num.RN_BEDROOM, room_num.RN_KITCHEN, room_num.RN_BATHROOM
-        FROM property
-        LEFT JOIN room_num ON property.PR_ID = room_num.PR_ID
-        WHERE property.PR_ID = $pr_id";
-$result = mysqli_query($conn, $sql);
+$query = "SELECT 
+          property.PR_ID, property.PR_PRICE, property.PR_PIC, property.PR_YEAROFBUILD, property.PR_DESCRIPTION, property.PR_FEATURES, property.PR_SQFT, property.PR_TYPE, property.PR_STATUS, property.PR_LOCATION, property.PR_CITY,
+          room_num.RN_BEDROOM, room_num.RN_KITCHEN, room_num.RN_BATHROOM
+          FROM 
+          property
+          LEFT JOIN room_num ON property.PR_ID = room_num.PR_ID
+          WHERE property.PR_ID = $pr_id";
+  $result = mysqli_query($conn, $query);
 
 if (mysqli_num_rows($result) > 0) {
   mysqli_data_seek($result, 0);
-
   $propertyData = mysqli_fetch_assoc($result);
-
-  ?>
+?>
 
   <div class="site-section site-section-sm mt-5">
     <div class="container">
@@ -122,50 +121,58 @@ if (mysqli_num_rows($result) > 0) {
 // mysqli_close($conn);
 ?>
           <!-- Gallery -->
+
+          <?php
+// Assuming $conn is your mysqli connection
+$pr_id = mysqli_real_escape_string($conn, $pr_id);
+
+// Fetch images using mysqli and prevent SQL injection
+$query = "SELECT * FROM property_pic WHERE PR_ID='$pr_id'";
+$result = mysqli_query($conn, $query);
+
+// Check if the query was successful
+if ($result) {
+    // Fetch all images
+    $allImages = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    // Free the result set
+    mysqli_free_result($result);
+} else {
+    // Handle the error, you might want to log or display an error message
+    echo "Error: " . mysqli_error($conn);
+}
+
+// Now $allImages contains the fetched images
+?>
+
           <div class="row no-gutters mt-5 ">
 
             <div class="col-sm-6 col-md-4 col-lg-3 p-1">
-              <a href="images/3.jpg" class="image-popup gal-item"><img src="images/3.jpg" alt="Image"
+              <?php foreach($allImages as $image) : ?>
+              <a href="images/<?php echo $image['PP_PIC_1']; ?>" class="image-popup gal-item">
+                <img src="images/3.jpg" alt="Image"
                   class="img-fluid" /></a>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 p-1">
-              <a href="images/3.jpg" class="image-popup gal-item"><img src="images/3.jpg" alt="Image"
-                  class="img-fluid" /></a>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 p-1">
-              <a href="images/3.jpg" class="image-popup gal-item"><img src="images/3.jpg" alt="Image"
-                  class="img-fluid" /></a>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 p-1">
-              <a href="images/3.jpg" class="image-popup gal-item"><img src="images/3.jpg" alt="Image"
-                  class="img-fluid" /></a>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 p-1">
-              <a href="images/3.jpg" class="image-popup gal-item"><img src="images/3.jpg" alt="Image"
-                  class="img-fluid" /></a>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 p-1">
-              <a href="images/3.jpg" class="image-popup gal-item"><img src="images/3.jpg" alt="Image"
-                  class="img-fluid" /></a>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 p-1">
-              <a href="images/3.jpg" class="image-popup gal-item"><img src="images/3.jpg" alt="Image"
-                  class="img-fluid" /></a>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 p-1">
-              <a href="images/3.jpg" class="image-popup gal-item"><img src="images/3.jpg" alt="Image"
-                  class="img-fluid" /></a>
+              <?php endforeach; ?>
             </div>
           </div>
         </div>
       </div>
+      <?php if(isset($_SESSION['US_ID'])) : ?>
       <div class="col-lg-4">
         <div class="bg-white widget border rounded p-3">
           <h3 class="h4 text-black widget-title mb-3"> Appointment </h3>
-          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-contact-agent">
+          <form action="sendAppointment.php" method="post" class="form-contact-agent">
+            <div class="form-group">
+              <label for="us_id"></label>
+              <input type="hidden" id="us_id" name="US_ID" value="<?php echo $_SESSION['US_ID'];?>" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="pr_id"></label>
+              <input type="hidden" id="pr_id" name="PR_ID" value="<?php echo $pr_id; ?>" class="form-control" />
+            </div>
             <div class="form-group">
               <label for="AP_PUROPSE">PUROPSE</label>
-              <input type="text" id="naAP_PUROPSEme" name="AP_PUROPSE" class="form-control" />
+              <input type="text" id="AP_PUROPSE" name="AP_PUROPSE" class="form-control" />
             </div>
             <div class="form-group">
               <label for="AP_TIME">TIME</label>
@@ -180,51 +187,12 @@ if (mysqli_num_rows($result) > 0) {
               <textarea type="text" name="AP_SUGESSTION" id="AP_SUGESSTION" class="form-control"></textarea>
             </div>
             <div class="form-group">
-              <input type="submit" id="phone" class="btn btn-primary" value="send Appointment" />
+              <input type="submit" name='submit' id="phone" class="btn btn-primary" value="send Appointment" />
             </div>
-
           </form>
-          <?php
-          // Assuming you have a session started on every page
-          session_start();
-
-          // Check if the form is submitted
-          if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-            // Check if the user is logged in
-            if (isset($_SESSION['user_id'])) {
-              // User is logged in, retrieve user ID
-              $user_id = $_SESSION['user_id'];
-
-              // Sanitize and retrieve form data
-              $purpose = mysqli_real_escape_string($conn, $_POST['AP_PUROPSE']);
-              $time = mysqli_real_escape_string($conn, $_POST['AP_TIME']);
-              $date = mysqli_real_escape_string($conn, $_POST['AP_DATE']);
-              $suggestion = mysqli_real_escape_string($conn, $_POST['AP_SUGESSTION']);
-
-              // Use prepared statements to prevent SQL injection
-              $stmt = $conn->prepare("INSERT INTO appointment(AP_PUROPSE, AP_TIME, AP_DATE, AP_SUGESSTION, AP_APPROVED, US_ID) VALUES (?, ?, ?, ?, 0, ?)");
-              $stmt->bind_param("ssssi", $purpose, $time, $date, $suggestion, $user_id);
-
-              if ($stmt->execute()) {
-                echo "Appointment added successfully!";
-              } else {
-                echo "Error: " . $stmt->error;
-              }
-
-              // Close the prepared statement and database connection
-              $stmt->close();
-              mysqli_close($conn);
-
-            } else {
-              // User is not logged in, redirect to login page
-              header("Location: login.php");
-              exit();
-            }
-          }
-          ?>
         </div>
       </div>
+      <?php endif;?>
     </div>
   </div>
 </div>

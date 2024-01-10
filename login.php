@@ -35,7 +35,7 @@ if ($fetch) {
             $_SESSION['EM_LNAME'] = $fetch[$lnameField];
             $_SESSION['EM_EMAIL'] = $fetch[$emailField];
             $_SESSION['EM_ID'] = $fetch[$idField];
-            header("location: Employee/assignedCustomers.html"); 
+            header("location: Employee/profile.php"); 
         } 
         else {
             $_SESSION['US_FNAME'] = $fetch[$fnameField];
