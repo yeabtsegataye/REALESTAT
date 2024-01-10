@@ -1,4 +1,35 @@
 <?php require "header.php"; ?>
+<?php
+if (isset($_POST['submit'])) {
+  // Retrieve values from the form
+  $employeeId = $_POST['employee'];
+  $customerId = $_POST['customer'];
+  $customerPhone = $_POST['phone'];
+  $appointmentDate = $_POST['apdate'];
+
+  $query= "SELECT
+              e.EM_FNAME AS EM_FName,
+              u.US_FNAME AS US_FName,
+              u.US_PHONENUM1 AS US_PHONENUM1
+            FROM assign_appointment aa
+            JOIN employee e ON aa.EM_ID = e.EM_ID
+            JOIN users u ON aa.US_ID = u.US_ID";
+  $result = mysqli_query($conn, $query);
+
+     if (mysqli_num_rows($result) > 0) {
+       mysqli_data_seek($result, 0);
+       $data = mysqli_fetch_assoc($results);
+     }
+
+  // Update appointment data
+  // $updateAppointmentQuery = "UPDATE assign_appointment SET AP_DATE = '$appointmentDate', AP_APPROVED = 1 WHERE US_ID = $customerId";
+  // mysqli_query($conn, $updateAppointmentQuery);
+
+  // // Close the database connection
+  // mysqli_close($conn);
+}
+?>
+
     <!-- Page Wrapper -->
     <div id="wrapper">
       <!-- Sidebar -->
@@ -146,17 +177,15 @@
                 <hr style="border: solid 1px rgb(137, 137, 228);">
                   <form action="" method="POST">
                     <div class="formbold-input-flex">
-                      
-
                       <div>
                         <label class="formbold-form-label">Employee</label>
 
                         <select
                           class="formbold-form-input"
-                          name="occupation"
+                          name="employee"
                           id="occupation"
                         >
-                          <option value="milki">Milki</option>
+                          <option value="<?php echo $data['EM_FNAME']; ?>">mmm</option>
                           <option value="yab">Yab</option>
                         </select>
                       </div>
@@ -165,7 +194,7 @@
 
                         <select
                           class="formbold-form-input"
-                          name="occupation"
+                          name="customer"
                           id="occupation"
                         >
                           <option value="male">Henok</option>
@@ -180,14 +209,6 @@
                       </label>
 
                       <div>
-                        <input
-                          type="text"
-                          name="areacode"
-                          id="areacode"
-                          placeholder="Area code"
-                          class="formbold-form-input formbold-w-45"
-                        />
-
                         <input
                           type="text"
                           name="phone"
@@ -205,7 +226,7 @@
                       </label>
                       <input
                         type="date"
-                        name="dob"
+                        name="apdate"
                         id="dob"
                         class="formbold-form-input"
                       />
@@ -213,7 +234,7 @@
 
                   
 
-                    <button class="formbold-btn">Assign date</button>
+                    <button class="formbold-btn" name='submit'>Assign date</button>
                   </form>
                 </div>
               </div>

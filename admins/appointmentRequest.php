@@ -119,16 +119,6 @@
       <div class="container-fluid">
         <!-- Page Heading -->
         <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-        <p class="mb-4">
-          The Haylu Real Estate employee table is a key element in managing
-          personnel information within the company. This table includes
-          crucial details such as employee ID, name, contact information,
-          position, and hiring date. Serving as a centralized database, it
-          facilitates streamlined access to essential employee data for
-          efficient human resource management and organizational planning
-          within the Haylu Real Estate team.
-        </p>
-
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
           <div class="card-header py-3">
@@ -140,86 +130,53 @@
           <?php
                 include '../config/config.php';
                 ?>
-        <?php
-// Assuming you have already established a database connection using mysqli procedural style
-
-// Fetch employee data from the database
-$sql = "SELECT EM_FNAME, EM_LNAME, CONCAT(EM_COUNTRY, ', ', EM_CITY, ', ', EM_SUBCITY, ', ', EM_HOUSENUMBER) AS address, EM_DATEOFBIRTH, EM_POSITION, EM_SALARY, EM_EMAIL, EM_CELLPHONE1 FROM employee";
+      <?php
+// Fetch appointment data from the database
+$sql = "SELECT AP_PUROPSE, AP_TIME, AP_DATE, AP_SUGESSTION, US_ID FROM appointment";
 $result = mysqli_query($conn, $sql);
 
 // Check if the query was successful
-if (!$result) {
-    die("Error fetching data from the database: " . mysqli_error($conn));
+if ($result === false) {
+  // Handle the error, log it, or display an error message
+  die("Error fetching data from the database: " . mysqli_error($conn));
 }
 
-$employees = [];
+// Store the fetched data in an array
+$appointments = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    $employees[] = $row;
+  $appointments[] = $row;
 }
 
+// Close the database connection
 mysqli_close($conn);
 ?>
 
 
-<!-- HTML table structure -->
 <div class="table-responsive">
   <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
     <thead>
       <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Address</th>
-        <th>Birth Date</th>
-        <th>Position</th>
-        <th>Salary</th>
-        <th>Email</th>
-        <th>Phone</th>
+        <th>Purpose</th>
+        <th>Time</th>
+        <th>Date</th>
+        <th>Suggestion</th>
+        <th>User ID</th>
       </tr>
     </thead>
-    <tfoot>
-      <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Address</th>
-        <th>Birth Date</th>
-        <th>Position</th>
-        <th>Salary</th>
-        <th>Email</th>
-        <th>Phone</th>
-      </tr>
-    </tfoot>
     <tbody>
-      <?php foreach ($employees as $employee): ?>
+      <?php foreach ($appointments as $appointment): ?>
         <tr>
-          <td>
-            <?= $employee['EM_FNAME']; ?>
-          </td>
-          <td>
-            <?= $employee['EM_LNAME']; ?>
-          </td>
-          <td>
-            <?= $employee['address']; ?>
-          </td>
-          <td>
-            <?= $employee['EM_DATEOFBIRTH']; ?>
-          </td>
-          <td>
-            <?= $employee['EM_POSITION']; ?>
-          </td>
-          <td>
-            <?= $employee['EM_SALARY']; ?> ETB
-          </td>
-          <td>
-            <?= $employee['EM_EMAIL']; ?>
-          </td>
-          <td>
-            <?= $employee['EM_CELLPHONE1']; ?>
-          </td>
+          <td><?= $appointment['AP_PUROPSE']; ?></td>
+          <td><?= $appointment['AP_TIME']; ?></td>
+          <td><?= $appointment['AP_DATE']; ?></td>
+          <td><?= $appointment['AP_SUGESSTION']; ?></td>
+          <td><?= $appointment['US_ID']; ?></td>
         </tr>
       <?php endforeach; ?>
     </tbody>
   </table>
 </div>
+
 
 
           </div>

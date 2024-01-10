@@ -84,6 +84,12 @@
     <i class="fas fa-fw fa-table"></i>
     <span>Add Admin</span></a>
 </li>
+<li class="nav-item">
+
+<a class="nav-link" href="appointmentRequest.php">
+    <i class="fas fa-fw fa-table"></i>
+    <span>Appointment requests</span></a>
+</li>
         <li class="nav-item">
         <a class="nav-link" href="../index.php">
           <i class="fas fa-fw fa-table"></i>

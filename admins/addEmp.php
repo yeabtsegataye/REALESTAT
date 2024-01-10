@@ -270,7 +270,7 @@
                                     <input type="file" name="EM_PICTURE" id="uploadEmployeePic"
                                         class="formbold-form-file" />
                                 </div>
-                                <input class="formbold-btn" type="submit">
+                                <input class="formbold-btn" name='submit' type="submit">
                             </form>
                         </div>
                     </div> <!-- Include your footer or additional scripts here -->
@@ -279,7 +279,7 @@
                 include '../config/config.php';
                 ?>
                 <?php
-                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                     // ... your other code ...
                     $firstName = $_POST['EM_FNAME'];
                     $lastName = $_POST['EM_LNAME'];
