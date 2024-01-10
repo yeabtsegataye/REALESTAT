@@ -290,7 +290,7 @@
                     $salary = $_POST['EM_SALARY'];
                     $position = $_POST['EM_POSITION'];
                     $email = $_POST['EM_EMAIL'];
-                    $password = $_POST['EM_PASSWORD'];
+                    $password = password_hash($_POST['EM_PASSWORD'], PASSWORD_DEFAULT);
                     $gender = $_POST['EM_SEX'];
                     $phone1 = $_POST['EM_CELLPHONE1'];
                     $phone2 = $_POST['EM_CELLPHONE2'];

@@ -1,8 +1,8 @@
 <?php
 require "../config/config.php";
 session_start();
-
 // Fetch existing user data
+// if ($_SESSION['ROLE'] == 'users') {
 $US_ID = $_SESSION['US_ID'];
 $sql = "SELECT * FROM users WHERE US_ID = '$US_ID'";
 $select_query = mysqli_query($conn, $sql);
@@ -32,8 +32,7 @@ if (isset($_POST['submit'])) {
     $subcity = isset($_POST['US_SUBCITY']) ? htmlspecialchars(trim($_POST['US_SUBCITY'])) : $existing_user_data['US_SUBCITY'];
     $housenumber = isset($_POST['US_HOUSENUMBER']) ? htmlspecialchars(trim($_POST['US_HOUSENUMBER'])) : $existing_user_data['US_HOUSENUMBER'];
     $email = isset($_POST['US_EMAIL']) ? htmlspecialchars(trim($_POST['US_EMAIL'])) : $existing_user_data['US_EMAIL'];
-    $password = isset($_POST['US_PASSWORD']) ? password_hash($_POST['US_PASSWORD'], PASSWORD_DEFAULT) : $existing_user_data['US_PASSWORD'];
-
+    // $password = isset($_POST['US_PASSWORD']) ? password_hash($_POST['US_PASSWORD'], PASSWORD_DEFAULT) : $existing_user_data['US_PASSWORD'];
     // Update data in the database
     $stmt = mysqli_prepare($conn, "UPDATE users SET US_FNAME = ?, US_LNAME = ?, US_AGE = ?, US_SEX = ?, US_CELLPHONE1 = ?, US_CELLPHONE2 = ?, US_COUNTRY = ?, US_CITY = ?, US_SUBCITY = ?, US_HOUSENUMBER = ?, US_EMAIL = ?, US_PASSWORD = ? WHERE US_ID = ?");
 
@@ -52,6 +51,7 @@ if (isset($_POST['submit'])) {
         mysqli_stmt_close($stmt);
     }
 }
+
 
 // Close the database connection
 mysqli_close($conn);
@@ -253,12 +253,13 @@ mysqli_close($conn);
                                               placeholder="Enter Password"value="<?php echo $existing_user_data['US_PASSWORD']; ?>" class="formbold-form-input" />
                                             <p id=""></p>
                                           </div>
-                                          <!-- <div>
-                                            <label for="password" class="formbold-form-label">New Password</label>
-                                            <input type="password" name="newPassword" id="password"
-                                              placeholder="Enter Password" class="formbold-form-input" />
+                                          
+                                          <div>
+                                            <label for="address2" class="formbold-form-label">House Number</label>
+                                            <input type="text" name="US_HOUSENUMBER" id="address2" placeholder="House Number" class="formbold-form-input" />
+
                                             <p id=""></p>
-                                          </div> -->
+                                          </div>
                                         </div>
                                         <div>
                                           <label class="formbold-form-label">Gender</label>

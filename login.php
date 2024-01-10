@@ -1,55 +1,84 @@
-<?php require "config/config.php"; ?>
 <?php
+require "config/config.php";
 session_start();
 
+// ...
+
+function loginUser($conn, $table, $email, $password, $fnameField, $lnameField, $emailField, $idField, $roleField, $PASS)
+{
+    $login = mysqli_prepare($conn, "SELECT * FROM $table WHERE $emailField=?");
+    mysqli_stmt_bind_param($login, 's', $email);
+    mysqli_stmt_execute($login);
+
+    $result = mysqli_stmt_get_result($login);
+    $fetch = mysqli_fetch_assoc($result);
+
+    // ... (previous code)
+
+if ($fetch) {
+    $hashed_password_from_db = $fetch[$PASS];
+    if (password_verify($password, $hashed_password_from_db)) {
+        // Regenerate session ID
+        session_regenerate_id(true);
+
+        // Set session variables
+        $_SESSION['ROLE'] = $fetch[$roleField];
+        if ($_SESSION['ROLE'] == 'admin') {
+            $_SESSION['AD_FNAME'] = $fetch[$fnameField];
+            $_SESSION['AD_LNAME'] = $fetch[$lnameField];
+            $_SESSION['AD_EMAIL'] = $fetch[$emailField];
+            $_SESSION['AD_ID'] = $fetch[$idField];
+            header("location: admins/index.php");  
+        } 
+        elseif ($_SESSION['ROLE'] == 'employee') {
+            $_SESSION['EM_FNAME'] = $fetch[$fnameField];
+            $_SESSION['EM_LNAME'] = $fetch[$lnameField];
+            $_SESSION['EM_EMAIL'] = $fetch[$emailField];
+            $_SESSION['EM_ID'] = $fetch[$idField];
+            header("location: Employee/assignedCustomers.html"); 
+        } 
+        else {
+            $_SESSION['US_FNAME'] = $fetch[$fnameField];
+            $_SESSION['US_LNAME'] = $fetch[$lnameField];
+            $_SESSION['US_EMAIL'] = $fetch[$emailField];
+            $_SESSION['US_ID'] = $fetch[$idField];
+            header("location: index.php");  
+        }
+        exit;
+    } else {
+        echo "<script>alert('Password is not correct');</script>";
+    }
+} else {
+    echo "<script>alert('Email does not exist');</script>";
+}
+    mysqli_stmt_close($login);
+}
+
+
 if (isset($_POST['submit'])) {
-    if (empty($_POST['US_EMAIL']) || empty($_POST['US_PASSWORD'])) {
+    if (empty($_POST['EMAIL']) || empty($_POST['PASSWORD'])) {
         echo "<script>alert('Some inputs are empty');</script>";
     } else {
-        $US_EMAIL = $_POST['US_EMAIL'];
-        $US_PASSWORD = $_POST['US_PASSWORD'];
+        $EMAIL = $_POST['EMAIL'];
+        $PASSWORD = $_POST['PASSWORD'];
+        $loginAs = $_POST['loginAs'];
 
-        // Prepare and execute the SQL statement
-        $login = mysqli_prepare($conn, "SELECT * FROM users WHERE US_EMAIL=?");
-        mysqli_stmt_bind_param($login, 's', $US_EMAIL);
-        mysqli_stmt_execute($login);
-
-        // Get the result
-        $result = mysqli_stmt_get_result($login);
-        $fetch = mysqli_fetch_assoc($result);
-
-        if ($fetch) {
-            // Debugging: Print out the hashed password from the database
-            $hashed_password_from_db = $fetch['US_PASSWORD'];
-            echo "Hashed Password from Database: $hashed_password_from_db";
-
-            echo "Password Verify Result: " . (password_verify($US_PASSWORD, $hashed_password_from_db) ? 'true' : 'false');
-
-
-            if (password_verify($US_PASSWORD, $hashed_password_from_db)) {
-                $_SESSION['US_FNAME'] = $fetch['US_FNAME'];
-                $_SESSION['US_LNAME'] = $fetch['US_LNAME'];
-                $_SESSION['US_EMAIL'] = $fetch['US_EMAIL'];
-                $_SESSION['US_ID'] = $fetch['US_ID'];
-
-                header("location: index.php");
-                exit;
-            } else {
-                echo "<script>alert('Password is not correct');</script>";
-            }
-        } else {
-            echo "<script>alert('Email does not exist');</script>";
+        switch ($loginAs) {
+            case 'users':
+                loginUser($conn, 'users', $EMAIL, $PASSWORD, 'US_FNAME', 'US_LNAME', 'US_EMAIL', 'US_ID', 'role','US_PASSWORD');
+                break;
+            case 'employee':
+                loginUser($conn, 'employee', $EMAIL, $PASSWORD, 'EM_FNAME', 'EM_LNAME', 'EM_EMAIL', 'EM_ID', 'role','EM_PASSWORD');
+                break;
+            case 'admin':
+                loginUser($conn, 'admin', $EMAIL, $PASSWORD, 'AD_FNAME', 'AD_LNAME', 'AD_EMAIL', 'AD_ID', 'role','AD_PASSWORD');
+                break;
         }
 
-        // Close the statement and connection
-        mysqli_stmt_close($login);
         mysqli_close($conn);
     }
 }
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -98,31 +127,40 @@ if (isset($_POST['submit'])) {
                                     </div>
                                     <form action="login.php" method="POST" class="user">
                                         <div class="form-group">
-                                            <input type="email" name='US_EMAIL' class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
+                                            <input type="email" name='EMAIL' class="form-control form-control-user"
+                                                id="exampleInputEmail"
                                                 placeholder="Enter Email Address...">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name='US_PASSWORD'
+                                            <input type="password" name='PASSWORD'
                                                 class="form-control form-control-user" id="exampleInputPassword"
                                                 placeholder="Password">
                                         </div>
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="radio" class="custom-control-input" id="customCheck">
                                                 <label class="custom-control-label" for="customCheck">Remember
                                                     Me</label>
                                             </div>
-                                        </div>
+                                        </div> -->
+                                        <label>Login As:</label>
                                         <div class="form-group">
-                                            <label for="loginAs">Login As:</label>
-                                            <select class="form-control" id="loginAs" name="loginAs">
-                                                <option value="admin">Login as Admin</option>
-                                                <option value="employee">Login as Employee</option>
-                                                <option value="user">Login as User</option>
-                                            </select>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="adminRadio" name="loginAs"
+                                                    class="custom-control-input" value="admin">
+                                                <label class="custom-control-label" for="adminRadio">Admin</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="employeeRadio" name="loginAs"
+                                                    class="custom-control-input" value="employee">
+                                                <label class="custom-control-label" for="employeeRadio">Employee</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="userRadio" name="loginAs"
+                                                    class="custom-control-input" value="users" checked>
+                                                <label class="custom-control-label" for="userRadio">User</label>
+                                            </div>
                                         </div>
-
                                         <a href="">
                                             <input type='submit' name='submit'
                                                 class="btn btn-primary btn-user btn-block" value='Login' />
