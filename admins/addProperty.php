@@ -134,7 +134,7 @@
             <!-- Learn More: https://formbold.com -->
             <div class="formbold-form-wrapper">
               <!-- <img src="your-image-here.jpg"> -->
-              <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+              <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
                 <div class="formbold-input-flex">
                   <div>
                     <label for="PR_TYPE" class="formbold-form-label"> Property Type </label>
@@ -271,7 +271,7 @@
     </div>
     <!-- End of Main Content -->
     <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" $$ isset($_POST)) {
     if (!empty($_POST)) {
         $RN_SALON = $_POST['RN_SALON'];
         $RN_BEDROOM = $_POST['RN_BEDROOM'];
@@ -294,130 +294,138 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pr_city = $_POST["PR_CITY"];
         $pr_name = $_POST["PR_NAME"];
 
-        try {
-          if ($_FILES["upload"]["error"] == 4) {
-              echo "<script> alert('Image Does Not Exist'); </script>";
-          } else {
-              $fileName = $_FILES["upload"]["name"];
-              $fileSize = $_FILES["upload"]["size"];
-              $tmpName = $_FILES["upload"]["tmp_name"];
-  
-              $validImageExtension = ['jpg', 'jpeg', 'png'];
-              $imageExtension = explode('.', $fileName);
-              $imageExtension = strtolower(end($imageExtension));
-  
-              if (!in_array($imageExtension, $validImageExtension)) {
-                  echo "<script>alert('Invalid Image Extension');</script>";
-              } else if ($fileSize > 1000000) {
-                  echo "<script>alert('Image Size Is Too Large');</script>";
-              } else {
-                  $newImageName = uniqid() . '.' . $imageExtension;
-  
-                  // Check if the upload directory exists, create it if not
-                  $uploadDirectory = 'Pimg/';
-                  if (!is_dir($uploadDirectory)) {
-                      mkdir($uploadDirectory, 0777, true);
-                  }
-  
-                  $destination = $uploadDirectory . $newImageName;
-  
-                  if (move_uploaded_file($tmpName, $destination)) {
-                      $sql = "INSERT INTO property (PR_PIC, PR_TYPE, PR_LOCATION, PR_PRICE, PR_DESCRIPTION, PR_SQFT, PR_YEAROFBUILD, PR_FEATURES, PR_STATUS, RN_ID, CAT_ID, CREATED_AT, PR_CITY, PR_NAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $dir = 'thumbnail/' . basename($pr_pic);
+        $sql = "INSERT INTO property (PR_PIC, PR_TYPE, PR_LOCATION, PR_PRICE, PR_DESCRIPTION, PR_SQFT, PR_YEAROFBUILD, PR_FEATURES, PR_STATUS, RN_ID, CAT_ID, CREATED_AT, PR_CITY, PR_NAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
 
-                      $stmt = mysqli_prepare($conn, $sql);
+
+
+
+
+//         try {
+//           if ($_FILES["upload"]["error"] == 4) {
+//               echo "<script> alert('Image Does Not Exist'); </script>";
+//           } else {
+//               $fileName = $_FILES["upload"]["name"];
+//               $fileSize = $_FILES["upload"]["size"];
+//               $tmpName = $_FILES["upload"]["tmp_name"];
+  
+//               $validImageExtension = ['jpg', 'jpeg', 'png'];
+//               $imageExtension = explode('.', $fileName);
+//               $imageExtension = strtolower(end($imageExtension));
+  
+//               if (!in_array($imageExtension, $validImageExtension)) {
+//                   echo "<script>alert('Invalid Image Extension');</script>";
+//               } else if ($fileSize > 1000000) {
+//                   echo "<script>alert('Image Size Is Too Large');</script>";
+//               } else {
+//                   $newImageName = uniqid() . '.' . $imageExtension;
+  
+//                   // Check if the upload directory exists, create it if not
+//                   $uploadDirectory = 'Pimg/';
+//                   if (!is_dir($uploadDirectory)) {
+//                       mkdir($uploadDirectory, 0777, true);
+//                   }
+  
+//                   $destination = $uploadDirectory . $newImageName;
+  
+//                   if (move_uploaded_file($tmpName, $destination)) {
+//                       $sql = "INSERT INTO property (PR_PIC, PR_TYPE, PR_LOCATION, PR_PRICE, PR_DESCRIPTION, PR_SQFT, PR_YEAROFBUILD, PR_FEATURES, PR_STATUS, RN_ID, CAT_ID, CREATED_AT, PR_CITY, PR_NAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+//                       $stmt = mysqli_prepare($conn, $sql);
               
-                      mysqli_stmt_bind_param($stmt, "sssssssssiisss", $pr_pic, $pr_type, $pr_location, $pr_price, $pr_description, $pr_sqft, $pr_yearofbuild, $pr_features, $pr_status, $rn_id, $cat_id, $created_at, $pr_city, $pr_name);
+//                       mysqli_stmt_bind_param($stmt, "sssssssssiisss", $pr_pic, $pr_type, $pr_location, $pr_price, $pr_description, $pr_sqft, $pr_yearofbuild, $pr_features, $pr_status, $rn_id, $cat_id, $created_at, $pr_city, $pr_name);
               
-                      if (mysqli_stmt_execute($stmt)) {
-                          // Retrieve the last inserted property id
-                          $PR_ID = mysqli_insert_id($conn);
-                          echo "Property record inserted successfully";
-                           // Assuming you have a foreign key column in the room table named 'PR_ID'
-                          $sql = "INSERT INTO room_num (PR_ID, RN_SALON, RN_BEDROOM, RN_KITCHEN, RN_SERVICE, RN_BATHROOM) VALUES (?, ?, ?, ?, ?, ?)";
+//                       if (mysqli_stmt_execute($stmt)) {
+//                           // Retrieve the last inserted property id
+//                           $PR_ID = mysqli_insert_id($conn);
+//                           echo "Property record inserted successfully";
+//                            // Assuming you have a foreign key column in the room table named 'PR_ID'
+//                           $sql = "INSERT INTO room_num (PR_ID, RN_SALON, RN_BEDROOM, RN_KITCHEN, RN_SERVICE, RN_BATHROOM) VALUES (?, ?, ?, ?, ?, ?)";
 
-                          $stmt = mysqli_prepare($conn, $sql);
-                          mysqli_stmt_bind_param($stmt, 'isssss', $PR_ID, $RN_SALON, $RN_BEDROOM, $RN_KITCHEN, $RN_SERVICE, $RN_BATHROOM);
+//                           $stmt = mysqli_prepare($conn, $sql);
+//                           mysqli_stmt_bind_param($stmt, 'isssss', $PR_ID, $RN_SALON, $RN_BEDROOM, $RN_KITCHEN, $RN_SERVICE, $RN_BATHROOM);
 
-                          if (mysqli_stmt_execute($stmt)) {
-                              echo "Room record inserted successfully";
-                          } else {
-                              echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-                          }
-                      } else {
-                          echo "<script>alert('Error moving file to destination');</script>";
-                      }
-              }
-          }
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
-        }
+//                           if (mysqli_stmt_execute($stmt)) {
+//                               echo "Room record inserted successfully";
+//                           } else {
+//                               echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+//                           }
+//                       } else {
+//                           echo "<script>alert('Error moving file to destination');</script>";
+//                       }
+//               }
+//           }
+//         } catch (Exception $e) {
+//             echo "Error: " . $e->getMessage();
+//         }
 
-            ////////////////////
-            try {
-                $uploadDirectory = 'Gimg/';
-                $uploadedImageNames = [];
+//             ////////////////////
+//             try {
+//                 $uploadDirectory = 'Gimg/';
+//                 $uploadedImageNames = [];
 
-                for ($i = 1; $i <= 8; $i++) {
-                    $inputName = "upload" . $i;
+//                 for ($i = 1; $i <= 8; $i++) {
+//                     $inputName = "upload" . $i;
 
-                    if ($_FILES[$inputName]["error"] == 4) {
-                        continue; // Image does not exist, move to the next one
-                    }
+//                     if ($_FILES[$inputName]["error"] == 4) {
+//                         continue; // Image does not exist, move to the next one
+//                     }
 
-                    $fileName = $_FILES[$inputName]["name"];
-                    $fileSize = $_FILES[$inputName]["size"];
-                    $tmpName = $_FILES[$inputName]["tmp_name"];
+//                     $fileName = $_FILES[$inputName]["name"];
+//                     $fileSize = $_FILES[$inputName]["size"];
+//                     $tmpName = $_FILES[$inputName]["tmp_name"];
 
-                    $validImageExtension = ['jpg', 'jpeg', 'png'];
-                    $imageExtension = explode('.', $fileName);
-                    $imageExtension = strtolower(end($imageExtension));
+//                     $validImageExtension = ['jpg', 'jpeg', 'png'];
+//                     $imageExtension = explode('.', $fileName);
+//                     $imageExtension = strtolower(end($imageExtension));
 
-                    if (!in_array($imageExtension, $validImageExtension)) {
-                        echo "<script>alert('Invalid Image Extension');</script>";
-                    } elseif ($fileSize > 1000000) {
-                        echo "<script>alert('Image Size Is Too Large');</script>";
-                    } else {
-                        $newImageName = uniqid() . '.' . $imageExtension;
-                        $destination = $uploadDirectory . $newImageName;
+//                     if (!in_array($imageExtension, $validImageExtension)) {
+//                         echo "<script>alert('Invalid Image Extension');</script>";
+//                     } elseif ($fileSize > 1000000) {
+//                         echo "<script>alert('Image Size Is Too Large');</script>";
+//                     } else {
+//                         $newImageName = uniqid() . '.' . $imageExtension;
+//                         $destination = $uploadDirectory . $newImageName;
 
-                        if (move_uploaded_file($tmpName, $destination)) {
-                            $uploadedImageNames[] = $newImageName;
-                        } else {
-                            echo "<script>alert('Error moving file to destination');</script>";
-                        }
-                    }
-                }
+//                         if (move_uploaded_file($tmpName, $destination)) {
+//                             $uploadedImageNames[] = $newImageName;
+//                         } else {
+//                             echo "<script>alert('Error moving file to destination');</script>";
+//                         }
+//                     }
+//                 }
 
-                // Insert uploaded image names into the database
-                $query = "INSERT INTO property_pic (PP_PIC_1, PP_PIC_2, PP_PIC_3, PP_PIC_4, PP_PIC_5, PP_PIC_6, PP_PIC_7, PP_PIC_8, PR_ID) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//                 // Insert uploaded image names into the database
+//                 $query = "INSERT INTO property_pic (PP_PIC_1, PP_PIC_2, PP_PIC_3, PP_PIC_4, PP_PIC_5, PP_PIC_6, PP_PIC_7, PP_PIC_8, PR_ID) 
+//                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                $stmt = mysqli_prepare($conn, $query);
-                $params = array_merge($uploadedImageNames, array_fill(0, 9 - count($uploadedImageNames), null), [$PR_ID]);
+//                 $stmt = mysqli_prepare($conn, $query);
+//                 $params = array_merge($uploadedImageNames, array_fill(0, 9 - count($uploadedImageNames), null), [$PR_ID]);
 
-                mysqli_stmt_bind_param($stmt, 'ssssssssi', ...$params);
+//                 mysqli_stmt_bind_param($stmt, 'ssssssssi', ...$params);
 
-                if (mysqli_stmt_execute($stmt)) {
-                    echo "<script>alert('Successfully Added');</script>";
-                } else {
-                    echo "Error: " . $query . "<br>" . mysqli_error($conn);
-                }
+//                 if (mysqli_stmt_execute($stmt)) {
+//                     echo "<script>alert('Successfully Added');</script>";
+//                 } else {
+//                     echo "Error: " . $query . "<br>" . mysqli_error($conn);
+//                 }
 
-                mysqli_stmt_close($stmt);
-            } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
-            }
-        } else {
-            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-        }
+//                 mysqli_stmt_close($stmt);
+//             } catch (Exception $e) {
+//                 echo "Error: " . $e->getMessage();
+//             }
+//         } else {
+//             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+//         }
 
-        mysqli_stmt_close($stmt);
-    } else {
-        echo "Form data is empty. Please submit the form.";
-    }
+//         mysqli_stmt_close($stmt);
+//     } else {
+//         echo "Form data is empty. Please submit the form.";
+     }
 }
 
-mysqli_close($conn);
+// mysqli_close($conn);
 
 ?>
 
