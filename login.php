@@ -1,7 +1,6 @@
 <?php
 require "config/config.php";
 session_start();
-
 // ...
 
 function loginUser($conn, $table, $email, $password, $fnameField, $lnameField, $emailField, $idField, $roleField, $PASS)
