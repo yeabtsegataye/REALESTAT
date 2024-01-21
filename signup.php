@@ -11,7 +11,6 @@ if (isset($_POST['submit'])) {
         $US_EMAIL = $_POST['US_EMAIL'];
         $US_PASSWORD = $_POST['US_PASSWORD'];
         $confirm_password = $_POST['confirm_password'];
-
         // Checking if the password is at least 8 characters long
         if (strlen($US_PASSWORD) < 8) {
             echo "<script>alert('Password must be at least 8 characters!');</script>";
