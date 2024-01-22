@@ -1,6 +1,7 @@
 <?php
 require "config/config.php";
 ?>
+
 <?php
 if (isset($_POST['submit'])) {
     if (empty($_POST['US_FNAME']) || empty($_POST['US_LNAME']) || empty($_POST['US_EMAIL']) || empty($_POST['US_PASSWORD']) || empty($_POST['confirm_password'])) {
