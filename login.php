@@ -97,7 +97,7 @@ if (isset($_POST['submit'])) {
                 loginUser($conn, 'employee', $EMAIL, $PASSWORD, 'EM_FNAME', 'EM_LNAME', 'EM_EMAIL', 'EM_ID', 'role','EM_PASSWORD');
                 break;
             case 'admin':
-                loginUser($conn, 'admin', $EMAIL, $PASSWORD, 'AD_FNAME', 'AD_LNAME', 'AD_EMAIL', 'AD_ID', 'role','AD_PASSWORD');
+                loginUser($conn, 'admins', $EMAIL, $PASSWORD, 'AD_FNAME', 'AD_LNAME', 'AD_EMAIL', 'AD_ID', 'role','AD_PASSWORD');
                 break;
         }
 

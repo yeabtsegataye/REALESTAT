@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+session_start();
 
+?>
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -86,7 +89,7 @@
 
           <!-- Topbar Search -->
           <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
-          <a href="#" class="btn btn-primary">Log out</a>
+          <a href="../logout.php" class="btn btn-primary">Log out</a>
 
           <!-- Topbar Navbar -->
         </nav>
@@ -94,26 +97,6 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
-        <?php
-include '../config/config.php';
-
-// Assuming US_ID = 3, AP_ID = 2, EM_ID = 1
-$ret = "SELECT * FROM assign_appointment";
-$res = $conn->query($ret);
-$rows = $res->fetch_assoc();
-
-echo $us_id = $rows['US_ID'];
-echo $ap_id = $rows['AP_ID'];
-echo $em_id = $rows['EM_ID'];
-
-$sql = "SELECT users.US_FNAME, users.US_LNAME, users.US_CELLPHONE1, appointment.AP_DATE, appointment.AP_TIME
-        FROM appointment
-        JOIN users ON assign_appointment.US_ID = users.US_ID
-        WHERE appointment.US_ID = $us_id AND appointment.AP_ID = $ap_id AND appointment.EM_ID = $em_id";
-
-$result = $conn->query($sql);
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -134,48 +117,71 @@ $result = $conn->query($sql);
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Phone</th>
+                          <tr>
+                            <th>Emp_Name</th>
+                            <th>Emp_phone</th>
+                            <th>Emp_email</th>
                             <th>Date</th>
                             <th>Time</th>
-                        </tr>
+                          </tr>
                         </thead>
                         <tfoot>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Phone</th>
+                          <tr>
+                            <th>Emp_Name</th>
+                            <th>Emp_phone</th>
+                            <th>Emp_email</th>
                             <th>Date</th>
                             <th>Time</th>
-                        </tr>
+                          </tr>
                         </tfoot>
                         <tbody>
-                        <?php
-                        // Fetch and display data
-                        if ($result) {
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<tr>";
-                                    echo "<td>" . $row['US_FNAME'] . "</td>";
-                                    echo "<td>" . $row['US_LNAME'] . "</td>";
-                                    echo "<td>" . $row['US_CELLPHONE1'] . "</td>";
-                                    echo "<td>" . $row['AP_DATE'] . "</td>";
-                                    echo "<td>" . $row['AP_TIME'] . "</td>";
-                                    echo "</tr>";
-                                }
+                          <?php
+                          include '../config/config.php';
+
+                          // Assuming session has already started
+                          $id = $_SESSION['EM_ID'];
+                          echo $id;
+
+                          if ($id) {
+                            // Assuming $conn is defined and is a valid mysqli connection
+                            $qry = "SELECT * FROM assign_appointment WHERE US_ID = $id";
+                            $result = mysqli_query($conn, $qry);
+
+                            if ($result) {
+                              while ($row = mysqli_fetch_assoc($result)) {
+                                $AP_ID = $row['AP_ID'];
+                                $EM_ID = $row['EM_ID'];
+
+                                // Fetch employee details
+                                $qry_emp = "SELECT EM_EMAIL, EM_CELLPHONE1, EM_FNAME FROM employee WHERE EM_ID = $EM_ID";
+                                $emp_result = mysqli_query($conn, $qry_emp);
+                                $employee = mysqli_fetch_assoc($emp_result);
+
+                                // Fetch appointment details
+                                $qry_appoint = "SELECT AP_DATE, AP_TIME FROM appointment WHERE AP_ID = $AP_ID";
+                                $appoint_result = mysqli_query($conn, $qry_appoint);
+                                $appointment = mysqli_fetch_assoc($appoint_result);
+
+                                echo "<tr>";
+                                echo "<td>" . $employee['EM_FNAME'] . "</td>";
+                                echo "<td>" . $employee['EM_CELLPHONE1'] . "</td>";
+                                echo "<td>" . $employee['EM_EMAIL'] . "</td>";
+                                echo "<td>" . $appointment['AP_DATE'] . "</td>";
+                                echo "<td>" . $appointment['AP_TIME'] . "</td>";
+                                echo "</tr>";
+                              }
                             } else {
-                                echo "<tr><td colspan='5'>No records found</td></tr>";
+                              echo "<tr><td colspan='5'>" . mysqli_error($conn) . "</td></tr>";
                             }
-                        } else {
-                            echo "<tr><td colspan='5'>Query failed: " . $conn->error . "</td></tr>";
-                        }
-                        ?>
+                          } else {
+                            echo "<tr><td colspan='5'>Session ID not set.</td></tr>";
+                          }
+                          ?>
                         </tbody>
-                    </table>
+                      </table>
                 </div>
             </div>
         </div>
