@@ -7,7 +7,6 @@ $sql = "SELECT * FROM employee WHERE EM_ID = '$EM_ID'";
 $select_query = mysqli_query($conn, $sql);
 
 if (!$select_query) {
-    // Handle the case where the query fails
     die("Error querying user data: " . mysqli_error($conn));
 }
 
